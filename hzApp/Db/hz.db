@@ -11,10 +11,13 @@
 record(stringin, "$(P)$(R)ProjectCode") {
     field(DESC, "Project reference code")
     field(DTYP, "asynOctetRead")
-    field(INP,  "@asyn(HZ_MB_PORT,0,1)HOLDING_REGISTERS=40037,2")
+    field(INP,  "@asyn($(PORT),6,$(TIMEOUT))HOLDING_REGISTERS=40037,2")
     field(SCAN, "10 second")
     info(asyn:READBACK, "1")
 }
+
+
+
 
 # =============================================================================
 # CUSTOMER NUMBER (40039/40040) - 32-bit integer, 2 registri
@@ -22,11 +25,10 @@ record(stringin, "$(P)$(R)ProjectCode") {
 record(longin, "$(P)$(R)CustomerNumber") {
     field(DESC, "Client reference number")
     field(DTYP, "asynInt32")
-    field(INP,  "@asyn(HZ_MB_PORT,0,1)HOLDING_REGISTERS=40039,2")
+    field(INP,  "@asyn($(PORT),6,$(TIMEOUT))HOLDING_REGISTERS=40039,2")
     field(SCAN, "10 second")
     info(asyn:READBACK, "1")
 }
-
 
 
 
