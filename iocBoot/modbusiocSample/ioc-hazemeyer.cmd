@@ -29,10 +29,10 @@ modbusInterposeConfig("Hazemeyer_Asyn", 0, 0, 0)
 
 
 ## Write holding registers
-drvModbusAsynConfigure("Hazemeyer_001_WAO", "Hazemeyer_Asyn", 1,    6, 0, 16, 0, 1000, "HAZEMEYER")
+drvModbusAsynConfigure("Hazemeyer_001_WAO", "Hazemeyer_Asyn", 1, 6, 0, 16, 0, 1000, "HAZEMEYER")
 
 ## Read holding registers
-drvModbusAsynConfigure("Hazemeyer_001_RAO", "Hazemeyer_Asyn", 1,    3, 0, 16, 0, 1000, "HAZEMEYER")
+drvModbusAsynConfigure("Hazemeyer_001_RAO", "Hazemeyer_Asyn", 1, 3, 0, 46, 0, 1000, "HAZEMEYER")
 
 
 # Load database
@@ -43,5 +43,11 @@ dbLoadRecords("../../db/hz.db", "P=PS:LAB:,R=PS1:,PORT=Hazemeyer_001_RAO, WPORT=
 
 # Inizializza la IOC
 iocInit
+
+
+# Enable Hazemeyer_Asyn (TCP/IP port) trace
+# asynSetTraceMask("Hazemeyer_Asyn", 0, 0x9)
+# asynSetTraceIOMask("Hazemeyer_Asyn", 0, 0x2)  
+
 
 
