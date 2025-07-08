@@ -1,261 +1,299 @@
-# hz_map_generated.db - auto-generated from hz.map
+# hz.db - Database EPICS Modbus HAZEMEYER Iocaste Power Supply
+# This file contains the database records for the HAZEMEYER Iocaste Power Supply
+# It includes the project code, customer number, and various control and status registers.
 
-# =========================
-# Command Power suo. (0x0004)
-# =========================
-# record(bo, "$(P)$(R)power_off") {
-#     field(DESC, "Command Power Off")
+# Direct Modbus addresses without substitutions
+
+
+# =============================================================================
+# PROJECT CODE (40037/40038) - 32-bit string, 2 registri
+# =============================================================================
+record(stringin, "$(P)$(R)ProjectCode") {
+    field(DESC, "Project reference code")
+    field(DTYP, "asynOctetRead")
+    field(INP,  "@asyn(HZ_MB_PORT,0,1)HOLDING_REGISTERS=40037,2")
+    field(SCAN, "10 second")
+    info(asyn:READBACK, "1")
+}
+
+# =============================================================================
+# CUSTOMER NUMBER (40039/40040) - 32-bit integer, 2 registri
+# =============================================================================
+record(longin, "$(P)$(R)CustomerNumber") {
+    field(DESC, "Client reference number")
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn(HZ_MB_PORT,0,1)HOLDING_REGISTERS=40039,2")
+    field(SCAN, "10 second")
+    info(asyn:READBACK, "1")
+}
+
+
+
+
+
+
+
+
+
+
+# # hz_map_generated.db - auto-generated from hz.map
+
+# # =========================
+# # Command Power suo. (0x0004)
+# # =========================
+# # record(bo, "$(P)$(R)power_off") {
+# #     field(DESC, "Command Power Off")
+# #     field(DTYP, "asynInt32")
+# #     field(OUT, "@asyn($(PORT),4,$(TIMEOUT))MODBUS_DATA")
+# #     field(ZNAM, "No")
+# #     field(ONAM, "Power Off")
+# # }
+
+# # record(bo, "$(P)$(R)power_on") {
+# #     field(DESC, "Command Power On")
+# #     field(DTYP, "asynInt32")
+# #     field(OUT, "@asyn($(PORT),4,$(TIMEOUT))MODBUS_DATA")
+# #     field(ZNAM, "No")
+# #     field(ONAM, "Power On")
+# # }
+
+# # record(bo, "$(P)$(R)reset") {
+# #     field(DESC, "Command Reset")
+# #     field(DTYP, "asynInt32")
+# #     field(OUT, "@asyn($(PORT),4,$(TIMEOUT))MODBUS_DATA")
+# #     field(ZNAM, "No")
+# #     field(ONAM, "Reset")
+# # }
+
+# # record(bo, "$(P)$(R)rampstart") {
+# #     field(DESC, "Command Rampstart")
+# #     field(DTYP, "asynInt32")
+# #     field(OUT, "@asyn($(PORT),4,$(TIMEOUT))MODBUS_DATA")
+# #     field(ZNAM, "No")
+# #     field(ONAM, "Rampstart")
+# # }
+
+# # record(bo, "$(P)$(R)global_off") {
+# #     field(DESC, "Command Global Off")
+# #     field(DTYP, "asynInt32")
+# #     field(OUT, "@asyn($(PORT),4,$(TIMEOUT))MODBUS_DATA")
+# #     field(ZNAM, "No")
+# #     field(ONAM, "Global Off")
+# # }
+
+# # =========================
+# # Channel Set current (0x0006)
+# # =========================
+# record(ao, "$(P)$(R)current") {
+#     field(DESC, "Channel Set Current")
 #     field(DTYP, "asynInt32")
-#     field(OUT, "@asyn($(PORT),4,$(TIMEOUT))MODBUS_DATA")
-#     field(ZNAM, "No")
-#     field(ONAM, "Power Off")
+#     field(OUT, "@asyn($(WPORT),6,$(TIMEOUT))MODBUS_DATA")
+#     field(LINR, "LINEAR")
+#     field(ESLO, "1")
+#     field(EGU, "mA")
+#     field(PREC, "0")
+#     field(DRVL, "0")
+#     field(DRVH, "32767")
 # }
 
-# record(bo, "$(P)$(R)power_on") {
-#     field(DESC, "Command Power On")
+# # =========================
+# # Channel Set Stewrate (0x0007)
+# # =========================
+# record(ao, "$(P)$(R)slewrate") {
+#     field(DESC, "Channel Set Stewrate")
 #     field(DTYP, "asynInt32")
-#     field(OUT, "@asyn($(PORT),4,$(TIMEOUT))MODBUS_DATA")
-#     field(ZNAM, "No")
-#     field(ONAM, "Power On")
+#     field(OUT, "@asyn($(PORT),7,$(TIMEOUT))MODBUS_DATA")
+#     field(LINR, "LINEAR")
+#     field(ESLO, "1")
+#     field(EGU, "")
+#     field(PREC, "0")
+#     field(DRVL, "0")
+#     field(DRVH, "65535")
 # }
 
-# record(bo, "$(P)$(R)reset") {
-#     field(DESC, "Command Reset")
+# # =========================
+# # Statuses Power sun. (0x000A)
+# # =========================
+
+# record(ai, "$(P)$(R)state_raw") {
+#     field(DESC, "Output current readback")
 #     field(DTYP, "asynInt32")
-#     field(OUT, "@asyn($(PORT),4,$(TIMEOUT))MODBUS_DATA")
-#     field(ZNAM, "No")
-#     field(ONAM, "Reset")
+#     field(INP, "@asyn($(PORT),10,$(TIMEOUT))MODBUS_DATA")
+#     field(SCAN, "1 second")
 # }
 
-# record(bo, "$(P)$(R)rampstart") {
-#     field(DESC, "Command Rampstart")
+
+
+# record(bi, "$(P)$(R)state_power_on") {
+#     field(DESC, "State Power On")
 #     field(DTYP, "asynInt32")
-#     field(OUT, "@asyn($(PORT),4,$(TIMEOUT))MODBUS_DATA")
-#     field(ZNAM, "No")
-#     field(ONAM, "Rampstart")
+#     field(INP, "@asyn($(PORT),10,$(TIMEOUT))MODBUS_DATA")
+#     field(ZNAM, "Off")
+#     field(ONAM, "On")
 # }
 
-# record(bo, "$(P)$(R)global_off") {
-#     field(DESC, "Command Global Off")
+# record(bi, "$(P)$(R)state_standby") {
+#     field(DESC, "State Standby")
 #     field(DTYP, "asynInt32")
-#     field(OUT, "@asyn($(PORT),4,$(TIMEOUT))MODBUS_DATA")
+#     field(INP, "@asyn($(PORT),10,$(TIMEOUT))MODBUS_DATA")
 #     field(ZNAM, "No")
-#     field(ONAM, "Global Off")
+#     field(ONAM, "Standby")
 # }
 
-# =========================
-# Channel Set current (0x0006)
-# =========================
-record(ao, "$(P)$(R)current") {
-    field(DESC, "Channel Set Current")
-    field(DTYP, "asynInt32")
-    field(OUT, "@asyn($(WPORT),6,$(TIMEOUT))MODBUS_DATA")
-    field(LINR, "LINEAR")
-    field(ESLO, "1")
-    field(EGU, "mA")
-    field(PREC, "0")
-    field(DRVL, "0")
-    field(DRVH, "32767")
-}
+# record(bi, "$(P)$(R)state_ready") {
+#     field(DESC, "State Ready")
+#     field(DTYP, "asynInt32")
+#     field(INP, "@asyn($(PORT),10,$(TIMEOUT))MODBUS_DATA")
+#     field(ZNAM, "No")
+#     field(ONAM, "Ready")
+# }
 
-# =========================
-# Channel Set Stewrate (0x0007)
-# =========================
-record(ao, "$(P)$(R)slewrate") {
-    field(DESC, "Channel Set Stewrate")
-    field(DTYP, "asynInt32")
-    field(OUT, "@asyn($(PORT),7,$(TIMEOUT))MODBUS_DATA")
-    field(LINR, "LINEAR")
-    field(ESLO, "1")
-    field(EGU, "")
-    field(PREC, "0")
-    field(DRVL, "0")
-    field(DRVH, "65535")
-}
+# record(bi, "$(P)$(R)state_all_fault") {
+#     field(DESC, "State All Fault")
+#     field(DTYP, "asynInt32")
+#     field(INP, "@asyn($(PORT),10,$(TIMEOUT))MODBUS_DATA")
+#     field(ZNAM, "No")
+#     field(ONAM, "All Fault")
+# }
 
-# =========================
-# Statuses Power sun. (0x000A)
-# =========================
+# record(bi, "$(P)$(R)state_bnc_rampstart") {
+#     field(DESC, "State BNC Rampstart")
+#     field(DTYP, "asynInt32")
+#     field(INP, "@asyn($(PORT),10,$(TIMEOUT))MODBUS_DATA")
+#     field(ZNAM, "No")
+#     field(ONAM, "BNC Rampstart")
+# }
 
-record(ai, "$(P)$(R)state_raw") {
-    field(DESC, "Output current readback")
-    field(DTYP, "asynInt32")
-    field(INP, "@asyn($(PORT),10,$(TIMEOUT))MODBUS_DATA")
-    field(SCAN, "1 second")
-}
+# record(bi, "$(P)$(R)state_remote") {
+#     field(DESC, "State Remote")
+#     field(DTYP, "asynInt32")
+#     field(INP, "@asyn($(PORT),10,$(TIMEOUT))MODBUS_DATA")
+#     field(ZNAM, "No")
+#     field(ONAM, "Remote")
+# }
 
+# record(bi, "$(P)$(R)state_busv") {
+#     field(DESC, "State Busv")
+#     field(DTYP, "asynInt32")
+#     field(INP, "@asyn($(PORT),10,$(TIMEOUT))MODBUS_DATA")
+#     field(ZNAM, "No")
+#     field(ONAM, "Busv")
+# }
 
+# record(bi, "$(P)$(R)state_ramp_progress") {
+#     field(DESC, "State Ramp Progress")
+#     field(DTYP, "asynInt32")
+#     field(INP, "@asyn($(PORT),10,$(TIMEOUT))MODBUS_DATA")
+#     field(ZNAM, "No")
+#     field(ONAM, "Ramp Progress")
+# }
 
-record(bi, "$(P)$(R)state_power_on") {
-    field(DESC, "State Power On")
-    field(DTYP, "asynInt32")
-    field(INP, "@asyn($(PORT),10,$(TIMEOUT))MODBUS_DATA")
-    field(ZNAM, "Off")
-    field(ONAM, "On")
-}
+# # =========================
+# # Output current readback (0x000B)
+# # =========================
+# record(ai, "$(P)$(R)current_raw_rb") {
+#     field(DESC, "Output current readback")
+#     field(DTYP, "asynInt32")
+#     field(INP, "@asyn($(PORT),11,$(TIMEOUT))MODBUS_DATA")
+#     field(SCAN, "1 second")
+#     # field(LINR, "LINEAR")
+#     # field(ESLO, "1")
+#     # field(EGU, "mA")
+#     # field(PREC, "0")
+#     # field(LOPR, "0")
+#     # field(HOPR, "32767")
+# }
 
-record(bi, "$(P)$(R)state_standby") {
-    field(DESC, "State Standby")
-    field(DTYP, "asynInt32")
-    field(INP, "@asyn($(PORT),10,$(TIMEOUT))MODBUS_DATA")
-    field(ZNAM, "No")
-    field(ONAM, "Standby")
-}
+# # =========================
+# # Output voltage readback (0x000C)
+# # =========================
+# record(ai, "$(P)$(R)voltage_rb") {
+#     field(DESC, "Output voltage readback")
+#     field(DTYP, "asynInt32")
+#     field(INP, "@asyn($(PORT),12,$(TIMEOUT))MODBUS_DATA")
+#     field(LINR, "LINEAR")
+#     field(ESLO, "1")
+#     field(EGU, "cV")
+#     field(PREC, "0")
+#     field(LOPR, "0")
+#     field(HOPR, "32767")
+# }
 
-record(bi, "$(P)$(R)state_ready") {
-    field(DESC, "State Ready")
-    field(DTYP, "asynInt32")
-    field(INP, "@asyn($(PORT),10,$(TIMEOUT))MODBUS_DATA")
-    field(ZNAM, "No")
-    field(ONAM, "Ready")
-}
+# # =========================
+# # Output earth current readback (0x000D)
+# # =========================
+# record(ai, "$(P)$(R)earth_current_rb") {
+#     field(DESC, "Output earth current readback")
+#     field(DTYP, "asynInt32")
+#     field(INP, "@asyn($(PORT),13,$(TIMEOUT))MODBUS_DATA")
+#     field(LINR, "LINEAR")
+#     field(ESLO, "1")
+#     field(EGU, "mA")
+#     field(PREC, "0")
+#     field(LOPR, "0")
+#     field(HOPR, "32767")
+# }
 
-record(bi, "$(P)$(R)state_all_fault") {
-    field(DESC, "State All Fault")
-    field(DTYP, "asynInt32")
-    field(INP, "@asyn($(PORT),10,$(TIMEOUT))MODBUS_DATA")
-    field(ZNAM, "No")
-    field(ONAM, "All Fault")
-}
+# # =========================
+# # Set current readback (0x000E)
+# # =========================
+# record(ai, "$(P)$(R)set_current_rb") {
+#     field(DESC, "Set current readback")
+#     field(DTYP, "asynInt32")
+#     field(INP, "@asyn($(PORT),14,$(TIMEOUT))MODBUS_DATA")
+#     field(LINR, "LINEAR")
+#     field(ESLO, "1")
+#     field(EGU, "mA")
+#     field(PREC, "0")
+#     field(LOPR, "0")
+#     field(HOPR, "32767")
+# }
 
-record(bi, "$(P)$(R)state_bnc_rampstart") {
-    field(DESC, "State BNC Rampstart")
-    field(DTYP, "asynInt32")
-    field(INP, "@asyn($(PORT),10,$(TIMEOUT))MODBUS_DATA")
-    field(ZNAM, "No")
-    field(ONAM, "BNC Rampstart")
-}
+# # =========================
+# # Faults 1 Power suo. (0x000F)
+# # =========================
+# record(bi, "$(P)$(R)fault_user1") {
+#     field(DESC, "Fault User 1")
+#     field(DTYP, "asynInt32")
+#     field(INP, "@asyn($(PORT),15,$(TIMEOUT))MODBUS_DATA")
+#     field(ZNAM, "OK")
+#     field(ONAM, "Fault")
+# }
+# # ...repeat for User2, User3, User4, User5, DC overcurrent, DCCT, Earth current, Ground fuse, AC overcurrent, Phase, Main contactor, Door...
 
-record(bi, "$(P)$(R)state_remote") {
-    field(DESC, "State Remote")
-    field(DTYP, "asynInt32")
-    field(INP, "@asyn($(PORT),10,$(TIMEOUT))MODBUS_DATA")
-    field(ZNAM, "No")
-    field(ONAM, "Remote")
-}
+# # =========================
+# # Faults 2 Power suo. (0x0010)
+# # =========================
+# record(bi, "$(P)$(R)fault_residual_alarm") {
+#     field(DESC, "Fault Residual alarm")
+#     field(DTYP, "asynInt32")
+#     field(INP, "@asyn($(PORT),16,$(TIMEOUT))MODBUS_DATA")
+#     field(ZNAM, "OK")
+#     field(ONAM, "Fault")
+# }
+# # ...repeat for Fuses capacitors, Low freq filter choke over-temp, High-freq transformer over-temp, High-freq filter choke over-temp 1, High-freq filter choke over-temp 2, Heatsink over-temp, Ambient over-temp...
 
-record(bi, "$(P)$(R)state_busv") {
-    field(DESC, "State Busv")
-    field(DTYP, "asynInt32")
-    field(INP, "@asyn($(PORT),10,$(TIMEOUT))MODBUS_DATA")
-    field(ZNAM, "No")
-    field(ONAM, "Busv")
-}
+# # =========================
+# # Command Power suo. (all bits)
+# # =========================
+# # record(mbbo, "$(P)$(R)cmd") {
+# #     field(DESC, "Command Power suo. (all bits)")
+# #     field(DTYP, "asynInt32")
+# #     field(OUT, "@asyn($(WPORT),4,$(TIMEOUT))MODBUS_DATA")
+# #     field(NOBT, "16")
+# #     field(ZRST, "Power Off")
+# #     field(ONST, "Power On")
+# #     field(TWST, "Not used")
+# #     field(THST, "Reset")
+# #     field(FRST, "Rampstart")
+# #     field(FVST, "Global Off")
+# # }
 
-record(bi, "$(P)$(R)state_ramp_progress") {
-    field(DESC, "State Ramp Progress")
-    field(DTYP, "asynInt32")
-    field(INP, "@asyn($(PORT),10,$(TIMEOUT))MODBUS_DATA")
-    field(ZNAM, "No")
-    field(ONAM, "Ramp Progress")
-}
-
-# =========================
-# Output current readback (0x000B)
-# =========================
-record(ai, "$(P)$(R)current_raw_rb") {
-    field(DESC, "Output current readback")
-    field(DTYP, "asynInt32")
-    field(INP, "@asyn($(PORT),11,$(TIMEOUT))MODBUS_DATA")
-    field(SCAN, "1 second")
-    # field(LINR, "LINEAR")
-    # field(ESLO, "1")
-    # field(EGU, "mA")
-    # field(PREC, "0")
-    # field(LOPR, "0")
-    # field(HOPR, "32767")
-}
-
-# =========================
-# Output voltage readback (0x000C)
-# =========================
-record(ai, "$(P)$(R)voltage_rb") {
-    field(DESC, "Output voltage readback")
-    field(DTYP, "asynInt32")
-    field(INP, "@asyn($(PORT),12,$(TIMEOUT))MODBUS_DATA")
-    field(LINR, "LINEAR")
-    field(ESLO, "1")
-    field(EGU, "cV")
-    field(PREC, "0")
-    field(LOPR, "0")
-    field(HOPR, "32767")
-}
-
-# =========================
-# Output earth current readback (0x000D)
-# =========================
-record(ai, "$(P)$(R)earth_current_rb") {
-    field(DESC, "Output earth current readback")
-    field(DTYP, "asynInt32")
-    field(INP, "@asyn($(PORT),13,$(TIMEOUT))MODBUS_DATA")
-    field(LINR, "LINEAR")
-    field(ESLO, "1")
-    field(EGU, "mA")
-    field(PREC, "0")
-    field(LOPR, "0")
-    field(HOPR, "32767")
-}
-
-# =========================
-# Set current readback (0x000E)
-# =========================
-record(ai, "$(P)$(R)set_current_rb") {
-    field(DESC, "Set current readback")
-    field(DTYP, "asynInt32")
-    field(INP, "@asyn($(PORT),14,$(TIMEOUT))MODBUS_DATA")
-    field(LINR, "LINEAR")
-    field(ESLO, "1")
-    field(EGU, "mA")
-    field(PREC, "0")
-    field(LOPR, "0")
-    field(HOPR, "32767")
-}
-
-# =========================
-# Faults 1 Power suo. (0x000F)
-# =========================
-record(bi, "$(P)$(R)fault_user1") {
-    field(DESC, "Fault User 1")
-    field(DTYP, "asynInt32")
-    field(INP, "@asyn($(PORT),15,$(TIMEOUT))MODBUS_DATA")
-    field(ZNAM, "OK")
-    field(ONAM, "Fault")
-}
-# ...repeat for User2, User3, User4, User5, DC overcurrent, DCCT, Earth current, Ground fuse, AC overcurrent, Phase, Main contactor, Door...
-
-# =========================
-# Faults 2 Power suo. (0x0010)
-# =========================
-record(bi, "$(P)$(R)fault_residual_alarm") {
-    field(DESC, "Fault Residual alarm")
-    field(DTYP, "asynInt32")
-    field(INP, "@asyn($(PORT),16,$(TIMEOUT))MODBUS_DATA")
-    field(ZNAM, "OK")
-    field(ONAM, "Fault")
-}
-# ...repeat for Fuses capacitors, Low freq filter choke over-temp, High-freq transformer over-temp, High-freq filter choke over-temp 1, High-freq filter choke over-temp 2, Heatsink over-temp, Ambient over-temp...
-
-# =========================
-# Command Power suo. (all bits)
-# =========================
-# record(mbbo, "$(P)$(R)cmd") {
+# # =========================
+# # Command Power suo. (all bits)
+# # =========================
+# record(ao, "$(P)$(R)cmd") {
 #     field(DESC, "Command Power suo. (all bits)")
 #     field(DTYP, "asynInt32")
 #     field(OUT, "@asyn($(WPORT),4,$(TIMEOUT))MODBUS_DATA")
-#     field(NOBT, "16")
-#     field(ZRST, "Power Off")
-#     field(ONST, "Power On")
-#     field(TWST, "Not used")
-#     field(THST, "Reset")
-#     field(FRST, "Rampstart")
-#     field(FVST, "Global Off")
 # }
-
-# =========================
-# Command Power suo. (all bits)
-# =========================
-record(ao, "$(P)$(R)cmd") {
-    field(DESC, "Command Power suo. (all bits)")
-    field(DTYP, "asynInt32")
-    field(OUT, "@asyn($(WPORT),4,$(TIMEOUT))MODBUS_DATA")
-}
