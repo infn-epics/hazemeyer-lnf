@@ -84,7 +84,16 @@ record(ai, "$(P):$(R):state_raw_rb") {
     field(SCAN, "1 second")
 }
 
-
+record(ai, "$(P):$(R):IMAX") {
+    field(DESC, "Max current")
+    field(SCAN, "Passive")
+    field(VAL,$(IMAX))
+}
+record(ai, "$(P):$(R):VMAX") {
+    field(DESC, "Max voltage")
+    field(SCAN, "Passive")
+    field(VAL,$(VMAX))
+}
 
 # record(bi, "$(P):$(R):state_power_on") {
 #     field(DESC, "State Power On")

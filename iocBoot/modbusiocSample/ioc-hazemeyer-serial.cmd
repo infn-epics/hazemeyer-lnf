@@ -37,7 +37,7 @@ drvModbusAsynConfigure("HAZMEYER_GUN01_PORT_WAO", "Hazemeyer_Asyn", 6,    6, 4, 
 drvModbusAsynConfigure("HAZMEYER_GUN01_PORT_RAO", "Hazemeyer_Asyn", 6,    3, 4, 12, 0, 1000, "HAZEMEYER")
 
 # Load database
-dbLoadRecords("../../db/hz.db", "P=SPARC:MAG,R=GUNSOL01,PORT=HAZMEYER_GUN01_PORT_RAO, WPORT=HAZMEYER_GUN01_PORT_WAO ,MAX=200,TIMEOUT=2000")
+dbLoadRecords("../../db/hz.db", "P=SPARC:MAG,R=GUNSOL01,PORT=HAZMEYER_GUN01_PORT_RAO, WPORT=HAZMEYER_GUN01_PORT_WAO ,IMAX=200,VMAX=110,TIMEOUT=2000")
 
 
 
@@ -49,7 +49,7 @@ drvModbusAsynConfigure("HAZMEYER_AC1SOL01_PORT_WAO", "Hazemeyer_Asyn", 7,    6, 
 drvModbusAsynConfigure("HAZMEYER_AC1SOL01_PORT_RAO", "Hazemeyer_Asyn", 7,    3, 4, 12, 0, 1000, "HAZEMEYER")
 
 # Load database
-dbLoadRecords("../../db/hz.db", "P=SPARC:MAG,R=AC1SOL01,PORT=HAZMEYER_AC1SOL01_PORT_RAO, WPORT=HAZMEYER_AC1SOL01_PORT_WAO,MAX=200 ,TIMEOUT=2000")
+dbLoadRecords("../../db/hz.db", "P=SPARC:MAG,R=AC1SOL01,PORT=HAZMEYER_AC1SOL01_PORT_RAO, WPORT=HAZMEYER_AC1SOL01_PORT_WAO,IMAX=200,VMAX=110 ,TIMEOUT=2000")
 
 
 
@@ -61,7 +61,7 @@ drvModbusAsynConfigure("HAZMEYER_AC1SOL02_PORT_WAO", "Hazemeyer_Asyn", 8,    6, 
 drvModbusAsynConfigure("HAZMEYER_AC1SOL02_PORT_RAO", "Hazemeyer_Asyn", 8,    3, 4, 12, 0, 1000, "HAZEMEYER")
 
 # Load database
-dbLoadRecords("../../db/hz.db", "P=SPARC:MAG,R=AC1SOL02,PORT=HAZMEYER_AC1SOL02_PORT_RAO, WPORT=HAZMEYER_AC1SOL02_PORT_WAO,MAX=200 ,TIMEOUT=2000")
+dbLoadRecords("../../db/hz.db", "P=SPARC:MAG,R=AC1SOL02,PORT=HAZMEYER_AC1SOL02_PORT_RAO, WPORT=HAZMEYER_AC1SOL02_PORT_WAO,IMAX=200,VMAX=110 ,TIMEOUT=2000")
 
 # Oppure usa il file di sostituzione
 # dbLoadTemplate("db/PowerSupply.substitutions")
