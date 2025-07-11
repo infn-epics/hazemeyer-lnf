@@ -46,17 +46,18 @@
 # =========================
 # Channel Set current (0x0006)
 # =========================
-record(ao, "$(P):$(R):current") {
+record(ao, "$(P):$(R):set_current") {
     field(DESC, "Channel Set Current")
     field(DTYP, "asynInt32")
     field(OUT, "@asyn($(WPORT),2,$(TIMEOUT))MODBUS_DATA")
     field(LINR, "LINEAR")
-    field(ESLO, "1")
-    field(EGU, "mA")
+    field(ESLO, "$(IMAX)/32767")
+    field(EGU, "A")
     field(PREC, "0")
     field(DRVL, "0")
-    field(DRVH, "32767")
+    field(DRVH, "$(IMAX)")
 }
+
 
 # =========================
 # Channel Set Stewrate (0x0007)
@@ -70,7 +71,7 @@ record(ao, "$(P):$(R):slewrate") {
     field(EGU, "")
     field(PREC, "0")
     field(DRVL, "0")
-    field(DRVH, "65535")
+    field(DRVH, "$(VMAX)")
 }
 
 # =========================
@@ -167,12 +168,6 @@ record(ai, "$(P):$(R):current_raw_rb") {
     field(DTYP, "asynInt32")
     field(INP, "@asyn($(PORT),7,$(TIMEOUT))MODBUS_DATA")
     field(SCAN, "1 second")
-    # field(LINR, "LINEAR")
-    # field(ESLO, "1")
-    # field(EGU, "mA")
-    # field(PREC, "0")
-    # field(LOPR, "0")
-    # field(HOPR, "32767")
 }
 
 record(calc, "$(P):$(R):current_rb")
@@ -192,13 +187,6 @@ record(ai, "$(P):$(R):voltage_raw_rb") {
     field(DTYP, "asynInt32")
     field(INP, "@asyn($(PORT),8,$(TIMEOUT))MODBUS_DATA")
     field(SCAN, "1 second")
-
-    # field(LINR, "LINEAR")
-    # field(ESLO, "1")
-    # field(EGU, "cV")
-    # field(PREC, "0")
-    # field(LOPR, "0")
-    # field(HOPR, "32767")
 }
 record(calc, "$(P):$(R):voltage_rb")
 {
