@@ -35,38 +35,24 @@ record(longin, "$(P)$(R)status_raw") {
 
 
 
+record(mbbiDirect, "$(P)$(R)statusDirect") {
+    field(DTYP, "asynUInt32Digital")
+    field(INP, "@asynMask($(PORT),16,0xFFFF,1)")
+    field(SCAN, "I/O Intr")
 
-# record(mbbi, "$(P)$(R)status") {
-#     field(DESC, "Current Raw Value")
-#     field(DTYP, "asynUInt32Digital")
-#     field(INP, "@asynMask($(PORT),16,0xFFFF,1)")
-#     field(SCAN, "1 second")
-#     field(ZRVL, 0)    field(ZRST, "POWER OFF")
-#     field(ONVL, 1)    field(ONST, "POWER ON")
-#     field(TWVL, 2)    field(TWST, "GLOBAL FAULT")
-#     field(THVL, 3)    field(THST, "READY")
-#     field(FRVL, 4)    field(FRST, "REMOTE")
-#     field(FVVL, 5)    field(FVST, "LOCAL")
-#     field(SXVL, 6)    field(SXST, "REGULATION OK")
-#     field(SVVL, 7)    field(SVST, "BIT 7")
-#     field(EIVL, 8)    field(EIST, "BIT 8")
-#     field(NIVL, 9)    field(NIST, "BIT 9")
-#     field(TEVL,10)    field(TEST, "BIT 10")
-#     field(ELVL,11)    field(ELST, "BIT 11")
-#     field(TVVL, 12)   field(TVST, "BIT 12")
-#     field(TTVL, 13)   field(TTST, "BIT 13")
-#     field(FTVL, 14)   field(FTST, "BIT 14")
-#     field(FFVL, 15)   field(FFST, "BIT 15")
-# }
+}
 
+# Questo record evita di usare power_on e power_off
 
 record(mbbi, "$(P)$(R)powerStatus") {
     field(DESC, "Power State")
     field(DTYP, "asynUInt32Digital")
-    field(INP, "@asynMask($(PORT), 0, 0x3, 0)")
-    field(ZRVL, 0) field(ZRST, "OFF")
-    field(ONVL, 1) field(ONST, "ON")
-    field(SCAN, "1 second")
+    field(INP, "@asynMask($(PORT), 16, 0x3, 0)")  # legge i bit 0–1 del registro 16
+    field(ONVL, 1) field(ONST, "ON")              # 01 = ON
+    field(TWVL, 2) field(TWST, "OFF")             # 10 = OFF
+    field(UNSV, "MAJOR")                          # Se il valore non è 1 o 2, segnala un allarme
+    field(UDF, "1")                               # Segnala valore indefinito all'avvio
+    field(SCAN, "1 second")                       # Polling ogni secondo
 }
 
 # record(bi, "$(P)$(R)power_on") {
@@ -106,25 +92,41 @@ record(bi, "$(P)$(R)ready") {
 }
 
 
-# Anche remote e local potrebbero essere degli mbbi
 
-record(bi, "$(P)$(R)remote") {
-    field(DESC, "Remote Status")
+
+# Questo record evita di usare local e remote
+
+record(mbbi, "$(P)$(R)accessMode") {
+    field(DESC, "Access Mode: Local/Remote")
     field(DTYP, "asynUInt32Digital")
-    field(INP, "@asynMask($(PORT),16,0x0010,1)")
+    field(INP, "@asynMask($(PORT), 16, 0x0030, 4)")  # Leggi bits 4-5 e shiftali di 4 bit
     field(SCAN, "1 second")
-    field(ZNAM, "LOCAL")
-    field(ONAM, "REMOTE")
+
+    field(ZRVL, 0)     field(ZRST, "UNKNOWN")   # 00
+    field(ONVL, 1)     field(ONST, "REMOTE")    # 01 (bit 4 = 1)
+    field(TWVL, 2)     field(TWST, "LOCAL")     # 10 (bit 5 = 1)
+    field(THVL, 3)     field(THST, "INVALID")   # 11
+    field(UNSV, "MAJOR")
 }
 
-record(bi, "$(P)$(R)local") {
-    field(DESC, "Local Status")
-    field(DTYP, "asynUInt32Digital")
-    field(INP, "@asynMask($(PORT),16,0x0020,1)")
-    field(SCAN, "1 second")
-    field(ZNAM, "REMOTE")
-    field(ONAM, "LOCAL")
-}
+
+# record(bi, "$(P)$(R)remote") {
+#     field(DESC, "Remote Status")
+#     field(DTYP, "asynUInt32Digital")
+#     field(INP, "@asynMask($(PORT),16,0x0010,1)")
+#     field(SCAN, "1 second")
+#     field(ZNAM, "LOCAL")
+#     field(ONAM, "REMOTE")
+# }
+
+# record(bi, "$(P)$(R)local") {
+#     field(DESC, "Local Status")
+#     field(DTYP, "asynUInt32Digital")
+#     field(INP, "@asynMask($(PORT),16,0x0020,1)")
+#     field(SCAN, "1 second")
+#     field(ZNAM, "REMOTE")
+#     field(ONAM, "LOCAL")
+# }
 
 record(bi, "$(P)$(R)regulation_ok") {
     field(DESC, "Regulation OK Status")
@@ -134,3 +136,5 @@ record(bi, "$(P)$(R)regulation_ok") {
     field(ZNAM, "NOT OK")
     field(ONAM, "OK")
 }
+
+
