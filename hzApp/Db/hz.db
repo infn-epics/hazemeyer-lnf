@@ -33,8 +33,6 @@ record(longin, "$(P)$(R)status_raw") {
     field(SCAN, "1 second")
 }
 
-
-
 record(mbbiDirect, "$(P)$(R)statusDirect") {
     field(DTYP, "asynUInt32Digital")
     field(INP, "@asynMask($(PORT),16,0xFFFF,1)")
@@ -48,8 +46,8 @@ record(mbbi, "$(P)$(R)powerStatus") {
     field(DESC, "Power State")
     field(DTYP, "asynUInt32Digital")
     field(INP, "@asynMask($(PORT), 16, 0x3, 0)")  # legge i bit 0–1 del registro 16
-    field(ONVL, 1) field(ONST, "ON")              # 01 = ON
-    field(TWVL, 2) field(TWST, "OFF")             # 10 = OFF
+    field(ONVL, 1) field(ONST, "POWER ON")              # 01 = ON
+    field(TWVL, 2) field(TWST, "POWER OFF")             # 10 = OFF
     field(UNSV, "MAJOR")                          # Se il valore non è 1 o 2, segnala un allarme
     field(UDF, "1")                               # Segnala valore indefinito all'avvio
     field(SCAN, "1 second")                       # Polling ogni secondo
@@ -90,8 +88,6 @@ record(bi, "$(P)$(R)ready") {
     field(ZNAM, "NOT READY")
     field(ONAM, "READY")
 }
-
-
 
 
 # Questo record evita di usare local e remote
