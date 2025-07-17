@@ -1,9 +1,12 @@
-# hz.db - Database EPICS Modbus HAZEMEYER Iocaste Power Supply
+# hz_iocst.db - Database EPICS Modbus HAZEMEYER Iocaste Power Supply
 # This file contains the database records for the HAZEMEYER Iocaste Power Supply
 # It includes the project code, customer number, and various control and status registers.
 
 # Direct Modbus addresses without substitutions
 
+########################################################################################
+### READOUT - Compliant with HAZEMEYER Iocaste Power Supply - Holding Registers Table
+########################################################################################
 
 record(ai, "$(P)$(R)current_rb") {
     field(DESC, "Current Value")
@@ -33,22 +36,6 @@ record(ai, "$(P)$(R)current_set_point_rb") {
     field(DTYP, "asynFloat64")  
     field(INP, "@asyn($(PORT),8,$(TIMEOUT))FLOAT32_LE") 
     field(EGU, "A")
-    field(SCAN, "1 second")
-}
-
-record(ao, "$(P)$(R)current_set") {
-    field(DESC, "Set Current")
-    field(DTYP, "asynFloat64")  
-    field(OUT, "@asyn($(WPORT),2,$(TIMEOUT))FLOAT64_BE_BS") 
-    field(EGU, "A")
-    field(SCAN, "1 second")
-}
-
-
-record(ao, "$(P)$(R)ramp_set") {
-    field(DESC, "Set Ramp")
-    field(DTYP, "asynFloat64")  
-    field(OUT, "@asyn($(WPORT),6,$(TIMEOUT))FLOAT64_BE_BS") 
     field(SCAN, "1 second")
 }
 
@@ -160,3 +147,54 @@ record(bi, "$(P)$(R)regulation_ok") {
 }
 
 
+########################################################################################
+### SETTINGS - Compliant with HAZEMEYER Iocaste Power Supply - Holding Registers Table
+########################################################################################
+
+record(ao, "$(P)$(R)current_set") {
+    field(DESC, "Set Current")
+    field(DTYP, "asynFloat64")  
+    field(OUT, "@asyn($(WPORT),2,$(TIMEOUT))FLOAT32_LE") 
+    field(EGU, "A")
+    field(SCAN, "1 second")
+}
+
+record(ao, "$(P)$(R)ramp_set") {
+    field(DESC, "Set Ramp")
+    field(DTYP, "asynFloat64")  
+    field(OUT, "@asyn($(WPORT),6,$(TIMEOUT))FLOAT32_LE") 
+    field(SCAN, "1 second")
+}
+
+record(bo, "$(P)$(R)power_on") {
+    field(DESC, "Power On Command")
+    field(DTYP, "asynUInt32Digital")
+    field(OUT, "@asynMask($(WPORT),0,0x0001,1)")
+    field(SCAN, "1 second")
+    field(ZNAM, "OFF")
+    field(ONAM, "ON")
+}
+
+record(bo, "$(P)$(R)power_off") {
+    field(DESC, "Power Off Command")
+    field(DTYP, "asynUInt32Digital")
+    field(OUT, "@asynMask($(WPORT),0,0x0002,1)")
+    field(SCAN, "1 second")
+    field(ZNAM, "NORMAL")
+    field(ONAM, "POWER OFF")
+}
+
+record(bo, "$(P)$(R)reset") {
+    field(DESC, "Reset Command")
+    field(DTYP, "asynUInt32Digital")
+    field(OUT, "@asynMask($(WPORT),0,0x0004,1)")
+    field(SCAN, "1 second")
+    field(ZNAM, "NORMAL")
+    field(ONAM, "RESET")
+}
+
+record(bo, "$(P)$(R)ramp_start") {
+    field(DESC, "Ramp Command")
+    field(DTYP, "asynUInt32Digital")
+    field(OUT, "@asynMask($(WPORT),0,0x0008,1)")
+}
