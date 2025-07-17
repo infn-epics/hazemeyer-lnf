@@ -4,7 +4,7 @@ include $(TOP)/configure/CONFIG
 #  ADD MACRO DEFINITIONS BELOW HERE
 
 # Install databases, templates & substitutions like this
-DB += hz.db
+DB += hz_iocast.db
 
 
 # If <anyname>.db template is not named <anyname>*.template add

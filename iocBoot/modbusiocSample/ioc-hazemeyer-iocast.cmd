@@ -1,10 +1,10 @@
-#!../../bin/linux-x86_64/hz
+#!../../bin/linux-x86_64/hz_iocast
 
 < envPaths
 
 ## Register all support components
-dbLoadDatabase "../../dbd/hz.dbd"
-hz_registerRecordDeviceDriver(pdbbase)
+dbLoadDatabase "../../dbd/hz_iocast.dbd"
+hz_iocast_registerRecordDeviceDriver(pdbbase)
 
 
 # TCP Connection - Hezemeyer:
@@ -46,7 +46,7 @@ drvModbusAsynConfigure("Hazemeyer_001_WAO", "Hazemeyer_Asyn", 1, 16, 0, 7, 0, 50
 
 
 # Load database
-dbLoadRecords("../../db/hz.db", "P=PS:LAB:,R=PS1:,PORT=Hazemeyer_001_RAO, WPORT=Hazemeyer_001_WAO ,TIMEOUT=1000")
+dbLoadRecords("../../db/hz_iocast.db", "P=PS:LAB:,R=PS1:,PORT=Hazemeyer_001_RAO, WPORT=Hazemeyer_001_WAO ,TIMEOUT=1000")
 
 # Oppure usa il file di sostituzione
 # dbLoadTemplate("db/PowerSupply.substitutions")
