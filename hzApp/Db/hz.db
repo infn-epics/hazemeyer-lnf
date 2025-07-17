@@ -5,24 +5,45 @@
 # Direct Modbus addresses without substitutions
 
 
-record(ai, "$(P)$(R)current") {
-    field(DESC, "Current Raw Value")
+record(ai, "$(P)$(R)current_rb") {
+    field(DESC, "Current Value")
     field(DTYP, "asynFloat64")  
     field(INP, "@asyn($(PORT),12,$(TIMEOUT))FLOAT32_LE") 
     field(SCAN, "1 second")
 }
 
-record(ai, "$(P)$(R)voltage") {
-    field(DESC, "Voltage Raw Value")
+record(ai, "$(P)$(R)voltage_rb") {
+    field(DESC, "Voltage Value")
     field(DTYP, "asynFloat64")  
     field(INP, "@asyn($(PORT),14,$(TIMEOUT))FLOAT32_LE") 
     field(SCAN, "1 second")
 }
 
-record(ai, "$(P)$(R)ramp") {
+record(ai, "$(P)$(R)ramp_rb") {
     field(DESC, "Ramp current")
     field(DTYP, "asynFloat64")  
     field(INP, "@asyn($(PORT),10,$(TIMEOUT))FLOAT32_LE") 
+    field(SCAN, "1 second")
+}
+
+record(ai, "$(P)$(R)current_set_point_rb") {
+    field(DESC, "Setted Current register")
+    field(DTYP, "asynFloat64")  
+    field(INP, "@asyn($(PORT),8,$(TIMEOUT))FLOAT32_LE") 
+    field(SCAN, "1 second")
+}
+
+record(ao, "$(P)$(R)current_set") {
+    field(DESC, "Set Current")
+    field(DTYP, "asynFloat64")  
+    field(OUT, "@asyn($(WPORT),2,$(TIMEOUT))FLOAT32_LE") 
+    field(SCAN, "1 second")
+}
+
+record(ao, "$(P)$(R)ramp_set") {
+    field(DESC, "Set Ramp")
+    field(DTYP, "asynFloat64")  
+    field(OUT, "@asyn($(WPORT),6,$(TIMEOUT))FLOAT32_LE") 
     field(SCAN, "1 second")
 }
 
@@ -40,7 +61,7 @@ record(mbbiDirect, "$(P)$(R)statusDirect") {
 
 }
 
-# Questo record evita di usare power_on e power_off
+# Questo record evita di usare power_on (tipo bi) e power_off (tipo bi)
 
 record(mbbi, "$(P)$(R)powerStatus") {
     field(DESC, "Power State")
@@ -90,7 +111,7 @@ record(bi, "$(P)$(R)ready") {
 }
 
 
-# Questo record evita di usare local e remote
+# Questo record evita di usare local (tipo bi) e remote (tipo bi)
 
 record(mbbi, "$(P)$(R)accessMode") {
     field(DESC, "Access Mode: Local/Remote")
