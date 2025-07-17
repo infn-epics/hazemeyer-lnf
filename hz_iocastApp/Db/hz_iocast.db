@@ -28,6 +28,7 @@ record(ai, "$(P)$(R)ramp_rb") {
     field(DESC, "Ramp current")
     field(DTYP, "asynFloat64")  
     field(INP, "@asyn($(PORT),10,$(TIMEOUT))FLOAT32_LE") 
+    field(EGU, "A/s")
     field(SCAN, "1 second")
 }
 
@@ -163,6 +164,7 @@ record(ao, "$(P)$(R)ramp_set") {
     field(DESC, "Set Ramp")
     field(DTYP, "asynFloat64")  
     field(OUT, "@asyn($(WPORT),6,$(TIMEOUT))FLOAT32_LE") 
+    field(EGU, "A/s")
     field(SCAN, "1 second")
 }
 
