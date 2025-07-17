@@ -48,14 +48,26 @@
 # =========================
 record(ao, "$(P):$(R):set_current") {
     field(DESC, "Channel Set Current")
-    field(DTYP, "asynInt32")
-    field(OUT, "@asyn($(WPORT),2,$(TIMEOUT))MODBUS_DATA")
-    field(LINR, "LINEAR")
-    field(ESLO, "0.0061037")
     field(EGU, "A")
     field(PREC, "0")
     field(DRVL, "0")
     field(DRVH, "$(IMAX)")
+    field(FLNK, "$(P):$(R):calc_current_raw")
+}
+record(calcout, "$(P):$(R):calc_current_raw") {
+    field(DESC, "Channel Set Current")
+    field(INPA, "$(P):$(R):set_current")
+    field(CALC, "(A * 32767)/$(IMAX)")
+    field(OUT,"$(P):$(R):set_current_raw")
+    field(FLNK, "$(P):$(R):set_current_raw")
+}
+
+
+record(ao, "$(P):$(R):set_current_raw") {
+    field(DESC, "Channel Set Current")
+    field(DTYP, "asynInt32")
+    field(OUT, "@asyn($(WPORT),2,$(TIMEOUT))MODBUS_DATA")
+    field(PREC, "0")
 }
 
 
@@ -64,14 +76,29 @@ record(ao, "$(P):$(R):set_current") {
 # =========================
 record(ao, "$(P):$(R):slewrate") {
     field(DESC, "Channel Set Stewrate")
-    field(DTYP, "asynInt32")
-    field(OUT, "@asyn($(PORT),3,$(TIMEOUT))MODBUS_DATA")
-    field(LINR, "LINEAR")
-    field(ESLO, "0.0061037")
     field(PREC, "0")
     field(DRVL, "0")
     field(DRVH, "$(IMAX)")
+    field(FLNK, "$(P):$(R):calc_slewrate_raw")
 }
+
+record(calcout, "$(P):$(R):calc_slewrate_raw") {
+    field(DESC, "Channel Set slewrate")
+    field(INPA, "$(P):$(R):slewrate")
+    field(CALC, "(A * 32767)/$(IMAX)")
+    field(OUT,"$(P):$(R):set_slewrate_raw")
+    field(FLNK, "$(P):$(R):set_slewrate_raw")
+}
+
+
+record(ao, "$(P):$(R):set_slewrate_raw") {
+    field(DESC, "Channel Set slewrate")
+    field(DTYP, "asynInt32")
+    field(OUT, "@asyn($(WPORT),3,$(TIMEOUT))MODBUS_DATA")
+    field(PREC, "0")
+    
+}
+
 
 # =========================
 # Statuses Power sun. (0x000A)
@@ -85,127 +112,14 @@ record(ai, "$(P):$(R):state_raw_rb") {
 }
 
 
-record(bi, "$(P):$(R):PowerOn") {
-    field(DESC, "Power State")
-    field(DTYP, "asynUInt32Digital")
-    field(INP, "@asynMask($(PORT) 6 0x01 $(TIMEOUT))")  
-    field(ZNAM, "OFF")
-    field(ONAM, "ON")
+
+record(ai, "$(P):$(R):state_raw2_rb") {
+    field(DESC, "Raw State")
+    field(DTYP, "asynInt32")
+    field(INP, "@asyn($(PORT),11,$(TIMEOUT))MODBUS_DATA")
     field(SCAN, "1 second")
 }
 
-record(bo, "$(P):$(R):PowerOn_Set") {
-    field(DTYP, "asynUInt32Digital")
-    field(OUT, "@asynMask($(WPORT) 6 0x01 $(TIMEOUT))")  # Offset 6, bit 0
-    field(ZNAM, "OFF")
-    field(ONAM, "ON")
-    field(DESC, "Power On Control")
-}
-
-record(bi, "$(P):$(R):StandBy") {
-    field(DESC,"Standby state")
-    field(DTYP, "asynUInt32Digital")
-    field(INP, "@asynMask($(PORT) 6 0x02 $(TIMEOUT))")  
-    field(ZNAM, "OFF")
-    field(ONAM, "ON")
-    field(SCAN, "1 second")
-}
-
-record(bo, "$(P):$(R):StandBy_Set") {
-    field(DTYP, "asynUInt32Digital")
-    field(OUT, "@asynMask($(WPORT) 6 0x02 $(TIMEOUT))")  # Offset 6, bit 1
-    field(ZNAM, "OFF")
-    field(ONAM, "ON")
-    field(DESC, "Standby Control")
-}
-
-record(bi, "$(P):$(R):Ready") {
-    field(DTYP, "asynUInt32Digital")
-    field(INP, "@asynMask($(PORT) 6 0x04 $(TIMEOUT))") 
-    field(ZNAM, "OFF")
-    field(ONAM, "ON")
-    field(SCAN, "1 second")
-}
-
-record(bo, "$(P):$(R):Ready_Set") {
-    field(DTYP, "asynUInt32Digital")
-    field(OUT, "@asynMask($(WPORT) 6 0x04 $(TIMEOUT))")  # Offset 6, bit 2
-    field(ZNAM, "OFF")
-    field(ONAM, "ON")
-    field(DESC, "Ready Control")
-}
-
-
-record(bi, "$(P):$(R):AllFault") {
-    field(DTYP, "asynUInt32Digital")
-    field(INP, "@asynMask($(PORT) 6 0x08 $(TIMEOUT))") 
-    field(ZNAM, "OFF")
-    field(ONAM, "ON")
-    field(SCAN, "1 second")
-}
-
-record(bo, "$(P):$(R):AllFault_Reset") {
-    field(DTYP, "asynUInt32Digital")
-    field(OUT, "@asynMask($(WPORT) 6 0x08 $(TIMEOUT))")  # Offset 6, bit 3
-    field(ZNAM, "NORMAL")
-    field(ONAM, "RESET")
-    field(DESC, "Reset All Faults")
-}
-
-record(bi, "$(P):$(R):BNCRamstart") {
-    field(DTYP, "asynUInt32Digital")
-    field(INP, "@asynMask($(PORT) 6 0x10 $(TIMEOUT))")  
-    field(ZNAM, "OFF")
-    field(ONAM, "ON")
-    field(SCAN, "1 second")
-}
-
-record(bo, "$(P):$(R):BNCRamstart_Set") {
-    field(DTYP, "asynUInt32Digital")
-    field(OUT, "@asynMask($(WPORT) 6 0x10 $(TIMEOUT))")  # Offset 6, bit 4
-    field(ZNAM, "OFF")
-    field(ONAM, "ON")
-    field(DESC, "BNC Ramstart Control")
-}
-
-record(bi, "$(P):$(R):Remote") {
-    field(DTYP, "asynUInt32Digital")
-    field(INP, "@asynMask($(PORT) 6 0x20 $(TIMEOUT))")  
-    field(ZNAM, "OFF")
-    field(ONAM, "ON")
-    field(SCAN, "1 second")
-}
-
-record(bo, "$(P):$(R):Remote_Set") {
-    field(DTYP, "asynUInt32Digital")
-    field(OUT, "@asynMask($(WPORT) 6 0x20 $(TIMEOUT))")  # Offset 6, bit 5
-    field(ZNAM, "LOCAL")
-    field(ONAM, "REMOTE")
-    field(DESC, "Remote/Local Control")
-}
-
-record(bi, "$(P):$(R):Busy") {
-    field(DTYP, "asynUInt32Digital")
-    field(INP, "@asynMask($(PORT) 6 0x4000 $(TIMEOUT))") 
-    field(ZNAM, "OFF")
-    field(ONAM, "ON")
-    field(SCAN, "1 second")
-}
-
-record(bi, "$(P):$(R):RampProgress") {
-    field(DTYP, "asynUInt32Digital")
-    field(INP, "@asynMask($(PORT) 6 0x8000 $(TIMEOUT))")
-    field(ZNAM, "OFF")
-    field(ONAM, "ON")
-    field(SCAN, "1 second")
-}
-
-record(bo, "$(P):$(R):PowerOn:Set") {
-    field(DTYP, "asynUInt32Digital")
-    field(OUT, "@asynMask($(WPORT) 6 0x01 $(TIMEOUT))") 
-    field(ZNAM, "OFF")
-    field(ONAM, "ON")
-}
 
 # =========================
 # Output current readback (0x000B)
@@ -214,11 +128,13 @@ record(bo, "$(P):$(R):PowerOn:Set") {
 record(ai, "$(P):$(R):IMAX") {
     field(DESC, "Max current")
     field(SCAN, "Passive")
+    field(PINI,"YES")
     field(VAL,$(IMAX))
 }
 record(ai, "$(P):$(R):VMAX") {
     field(DESC, "Max voltage")
     field(SCAN, "Passive")
+    field(PINI,"YES")
     field(VAL,$(VMAX))
 }
 record(ai, "$(P):$(R):current_raw_rb") {
@@ -232,7 +148,8 @@ record(calc, "$(P):$(R):current_rb")
 {
     field(DESC, "current_rb")
     field(INPA, "$(P):$(R):current_raw_rb")
-    field(CALC, "(A / 32767) * $(IMAX)")
+    field(INPB, "$(P):$(R):IMAX")
+    field(CALC, "(A / 32767) * B")
     field(PREC, "8")
     field(SCAN, "1 second")
 }
@@ -241,226 +158,7 @@ record(calc, "$(P):$(R):current_rb")
 # FAULTS 1 POWER SUPPLY (0x000F)
 # =========================
 
-record(bi, "$(P):$(R):Fault_User1") {
-    field(DESC, "User 1 Fault")
-    field(DTYP, "asynUInt32Digital")
-    field(INP, "@asynMask($(PORT) 11 0x01 $(TIMEOUT))")  # Offset 11, bit 0
-    field(ZNAM, "OK")
-    field(ONAM, "FAULT")
-    field(ZSV, "NO_ALARM")
-    field(OSV, "MAJOR")
-    field(SCAN, "1 second")
-}
 
-record(bi, "$(P):$(R):Fault_User2") {
-    field(DESC, "User 2 Fault")
-    field(DTYP, "asynUInt32Digital")
-    field(INP, "@asynMask($(PORT) 11 0x02 $(TIMEOUT))")  # Offset 11, bit 1
-    field(ZNAM, "OK")
-    field(ONAM, "FAULT")
-    field(ZSV, "NO_ALARM")
-    field(OSV, "MAJOR")
-    field(SCAN, "1 second")
-}
-
-record(bi, "$(P):$(R):Fault_User3") {
-    field(DESC, "User 3 Fault")
-    field(DTYP, "asynUInt32Digital")
-    field(INP, "@asynMask($(PORT) 11 0x04 $(TIMEOUT))")  # Offset 11, bit 2
-    field(ZNAM, "OK")
-    field(ONAM, "FAULT")
-    field(ZSV, "NO_ALARM")
-    field(OSV, "MAJOR")
-    field(SCAN, "1 second")
-}
-
-record(bi, "$(P):$(R):Fault_User4") {
-    field(DESC, "User 4 Fault")
-    field(DTYP, "asynUInt32Digital")
-    field(INP, "@asynMask($(PORT) 11 0x08 $(TIMEOUT))")  # Offset 11, bit 3
-    field(ZNAM, "OK")
-    field(ONAM, "FAULT")
-    field(ZSV, "NO_ALARM")
-    field(OSV, "MAJOR")
-    field(SCAN, "1 second")
-}
-
-
-record(bi, "$(P):$(R):Fault_User5") {
-    field(DESC, "User 5 Fault")
-    field(DTYP, "asynUInt32Digital")
-    field(INP, "@asynMask($(PORT) 11 0x10 $(TIMEOUT))")  # Offset 11, bit 4
-    field(ZNAM, "OK")
-    field(ONAM, "FAULT")
-    field(ZSV, "NO_ALARM")
-    field(OSV, "MAJOR")
-    field(SCAN, "1 second")
-}
-
-
-record(bi, "$(P):$(R):Fault_DCOvercurrent") {
-    field(DESC, "DC Overcurrent Fault")
-    field(DTYP, "asynUInt32Digital")
-    field(INP, "@asynMask($(PORT) 11 0x20 $(TIMEOUT))")  # Offset 11, bit 5
-    field(ZNAM, "OK")
-    field(ONAM, "FAULT")
-    field(ZSV, "NO_ALARM")
-    field(OSV, "MAJOR")
-    field(SCAN, "1 second")
-}
-
-
-record(bi, "$(P):$(R):Fault_DCCT") {
-    field(DESC, "DCCT Fault")
-    field(DTYP, "asynUInt32Digital")
-    field(INP, "@asynMask($(PORT) 11 0x40 $(TIMEOUT))")  # Offset 11, bit 6
-    field(ZNAM, "OK")
-    field(ONAM, "FAULT")
-    field(ZSV, "NO_ALARM")
-    field(OSV, "MAJOR")
-    field(SCAN, "1 second")
-}
-
-
-record(bi, "$(P):$(R):Fault_EarthCurrent") {
-    field(DESC, "Earth Current Fault")
-    field(DTYP, "asynUInt32Digital")
-    field(INP, "@asynMask($(PORT) 11 0x80 $(TIMEOUT))")  # Offset 11, bit 7
-    field(ZNAM, "OK")
-    field(ONAM, "FAULT")
-    field(ZSV, "NO_ALARM")
-    field(OSV, "MAJOR")
-    field(SCAN, "1 second")
-}
-
-
-record(bi, "$(P):$(R):Fault_GroundFuse") {
-    field(DESC, "Ground Fuse Fault")
-    field(DTYP, "asynUInt32Digital")
-    field(INP, "@asynMask($(PORT) 11 0x100 $(TIMEOUT))")  # Offset 11, bit 8
-    field(ZNAM, "OK")
-    field(ONAM, "FAULT")
-    field(ZSV, "NO_ALARM")
-    field(OSV, "MAJOR")
-    field(SCAN, "1 second")
-}
-
-record(bi, "$(P):$(R):Fault_ACOvercurrent") {
-    field(DESC, "AC Overcurrent Fault")
-    field(DTYP, "asynUInt32Digital")
-    field(INP, "@asynMask($(PORT) 11 0x200 $(TIMEOUT))")  # Offset 11, bit 9
-    field(ZNAM, "OK")
-    field(ONAM, "FAULT")
-    field(ZSV, "NO_ALARM")
-    field(OSV, "MAJOR")
-    field(SCAN, "1 second")
-}
-
-
-record(bi, "$(P):$(R):Fault_Phase") {
-    field(DESC, "Phase Fault")
-    field(DTYP, "asynUInt32Digital")
-    field(INP, "@asynMask($(PORT) 11 0x400 $(TIMEOUT))")  # Offset 11, bit 10
-    field(ZNAM, "OK")
-    field(ONAM, "FAULT")
-    field(ZSV, "NO_ALARM")
-    field(OSV, "MAJOR")
-    field(SCAN, "1 second")
-}
-
-
-record(bi, "$(P):$(R):Fault_MainContactor") {
-    field(DESC, "Main Contactor Fault")
-    field(DTYP, "asynUInt32Digital")
-    field(INP, "@asynMask($(PORT) 11 0x800 $(TIMEOUT))")  # Offset 11, bit 11
-    field(ZNAM, "OK")
-    field(ONAM, "FAULT")
-    field(ZSV, "NO_ALARM")
-    field(OSV, "MAJOR")
-    field(SCAN, "1 second")
-}
-
-record(bi, "$(P):$(R):Fault_Door") {
-    field(DESC, "Door Fault")
-    field(DTYP, "asynUInt32Digital")
-    field(INP, "@asynMask($(PORT) 11 0x1000 $(TIMEOUT))")  # Offset 11, bit 12
-    field(ZNAM, "OK")
-    field(ONAM, "FAULT")
-    field(ZSV, "NO_ALARM")
-    field(OSV, "MAJOR")
-    field(SCAN, "1 second")
-}
-# =========================
-# FAULTS 2 POWER SUPPLY (0x0010)
-# =========================
-
-# record(bi, "$(P):$(R):Fault_ResidualAlarm") {
-#     field(DESC, "Residual Alarm Fault")
-#     field(DTYP, "asynUInt32Digital")
-#     field(INP, "@asynMask($(PORT) 12 0x01 $(TIMEOUT))")  
-#     field(ZNAM, "OK")
-#     field(ONAM, "FAULT")
-#     field(ZSV, "NO_ALARM")
-#     field(OSV, "MAJOR")
-#     field(SCAN, "1 second")
-# }
-
-# record(bi, "$(P):$(R):Fault_FusesCapacitors") {
-#     field(DESC, "Fuses Capacitors Fault")
-#     field(DTYP, "asynUInt32Digital")
-#     field(INP, "@asynMask($(PORT) 12 0x02 $(TIMEOUT))")  
-#     field(ZNAM, "OK")
-#     field(ONAM, "FAULT")
-#     field(ZSV, "NO_ALARM")
-#     field(OSV, "MAJOR")
-#     field(SCAN, "1 second")
-#     field(DESC, "Fuses Capacitors Fault")
-# }
-
-# record(bi, "$(P):$(R):Fault_LFFilterChokeOverTemp") {
-#     field(DTYP, "asynUInt32Digital")
-#     field(DESC, "LF Filter Choke Over-Temp")
-#     field(INP, "@asynMask($(PORT) 12 0x04 $(TIMEOUT))")  
-#     field(ZNAM, "OK")
-#     field(ONAM, "FAULT")
-#     field(ZSV, "NO_ALARM")
-#     field(OSV, "MAJOR")
-#     field(SCAN, "1 second")
-# }
-
-# record(bi, "$(P):$(R):Fault_HFTransformerOverTemp") {
-#     field(DESC, "HF Transformer Over-Temp")
-#     field(DTYP, "asynUInt32Digital")
-#     field(INP, "@asynMask($(PORT) 12 0x08 $(TIMEOUT))")  # Offset 12, bit 3
-#     field(ZNAM, "OK")
-#     field(ONAM, "FAULT")
-#     field(ZSV, "NO_ALARM")
-#     field(OSV, "MAJOR")
-#     field(SCAN, "1 second")
-# }
-
-# record(bi, "$(P):$(R):Fault_HFFilterChokeOverTemp") {
-#     field(DESC, "HF Filter Choke Over-Temp")
-#     field(DTYP, "asynUInt32Digital")
-#     field(INP, "@asynMask($(PORT) 12 0x10 $(TIMEOUT))") 
-#     field(ZNAM, "OK")
-#     field(ONAM, "FAULT")
-#     field(ZSV, "NO_ALARM")
-#     field(OSV, "MAJOR")
-#     field(SCAN, "1 second")
-# }
-
-# record(bi, "$(P):$(R):Fault_HFFilterChoke2OverTemp") {
-#     field(DESC, "HF Filter Choke 2 Over-Temp")
-#     field(DTYP, "asynUInt32Digital")
-#     field(INP, "@asynMask($(PORT) 12 0x20 $(TIMEOUT))")
-#     field(ZNAM, "OK")
-#     field(ONAM, "FAULT")
-#     field(ZSV, "NO_ALARM")
-#     field(OSV, "MAJOR")
-#     field(SCAN, "1 second")
-    
-# }
 
 # =========================
 # Output voltage readback (0x000C)
@@ -475,7 +173,7 @@ record(calc, "$(P):$(R):voltage_rb")
 {
     field(DESC, "voltage_rb")
     field(INPB, "$(P):$(R):voltage_raw_rb")
-    field(CALC, "(B / 6553) * $(VMAX)")
+    field(CALC, "(B / 32767) * $(VMAX)")
     field(PREC, "8")
     field(SCAN, "1 second")
 }
@@ -510,18 +208,6 @@ record(ai, "$(P):$(R):set_current_rb") {
 }
 
 # # =========================
-# # Faults 1 Power suo. (0x000F)
-# # =========================
-# record(bi, "$(P):$(R):fault_user1") {
-#     field(DESC, "Fault User 1")
-#     field(DTYP, "asynInt32")
-#     field(INP, "@asyn($(PORT),15,$(TIMEOUT))MODBUS_DATA")
-#     field(ZNAM, "OK")
-#     field(ONAM, "Fault")
-# }
-# # ...repeat for User2, User3, User4, User5, DC overcurrent, DCCT, Earth current, Ground fuse, AC overcurrent, Phase, Main contactor, Door...
-
-# # =========================
 # # Faults 2 Power suo. (0x0010)
 # # =========================
 # record(bi, "$(P):$(R):fault_residual_alarm") {
@@ -533,21 +219,7 @@ record(ai, "$(P):$(R):set_current_rb") {
 # }
 # # ...repeat for Fuses capacitors, Low freq filter choke over-temp, High-freq transformer over-temp, High-freq filter choke over-temp 1, High-freq filter choke over-temp 2, Heatsink over-temp, Ambient over-temp...
 
-# # =========================
-# # Command Power suo. (all bits)
-# # =========================
-# # record(mbbo, "$(P):$(R):cmd") {
-# #     field(DESC, "Command Power suo. (all bits)")
-# #     field(DTYP, "asynInt32")
-# #     field(OUT, "@asyn($(WPORT),4,$(TIMEOUT))MODBUS_DATA")
-# #     field(NOBT, "16")
-# #     field(ZRST, "Power Off")
-# #     field(ONST, "Power On")
-# #     field(TWST, "Not used")
-# #     field(THST, "Reset")
-# #     field(FRST, "Rampstart")
-# #     field(FVST, "Global Off")
-# # }
+
 
 # =========================
 # Command Power suo. (all bits)
