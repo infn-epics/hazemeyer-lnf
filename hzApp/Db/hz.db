@@ -9,6 +9,7 @@ record(ai, "$(P)$(R)current_rb") {
     field(DESC, "Current Value")
     field(DTYP, "asynFloat64")  
     field(INP, "@asyn($(PORT),12,$(TIMEOUT))FLOAT32_LE") 
+    field(EGU, "A")
     field(SCAN, "1 second")
 }
 
@@ -16,6 +17,7 @@ record(ai, "$(P)$(R)voltage_rb") {
     field(DESC, "Voltage Value")
     field(DTYP, "asynFloat64")  
     field(INP, "@asyn($(PORT),14,$(TIMEOUT))FLOAT32_LE") 
+    field(EGU, "V")
     field(SCAN, "1 second")
 }
 
@@ -30,20 +32,23 @@ record(ai, "$(P)$(R)current_set_point_rb") {
     field(DESC, "Setted Current register")
     field(DTYP, "asynFloat64")  
     field(INP, "@asyn($(PORT),8,$(TIMEOUT))FLOAT32_LE") 
+    field(EGU, "A")
     field(SCAN, "1 second")
 }
 
 record(ao, "$(P)$(R)current_set") {
     field(DESC, "Set Current")
     field(DTYP, "asynFloat64")  
-    field(OUT, "@asyn($(WPORT),2,$(TIMEOUT))FLOAT32_LE") 
+    field(OUT, "@asyn($(WPORT),2,$(TIMEOUT))FLOAT64_BE_BS") 
+    field(EGU, "A")
     field(SCAN, "1 second")
 }
+
 
 record(ao, "$(P)$(R)ramp_set") {
     field(DESC, "Set Ramp")
     field(DTYP, "asynFloat64")  
-    field(OUT, "@asyn($(WPORT),6,$(TIMEOUT))FLOAT32_LE") 
+    field(OUT, "@asyn($(WPORT),6,$(TIMEOUT))FLOAT64_BE_BS") 
     field(SCAN, "1 second")
 }
 
