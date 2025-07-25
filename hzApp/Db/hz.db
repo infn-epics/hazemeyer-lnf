@@ -46,24 +46,24 @@
 # =========================
 # Channel Set current (0x0006)
 # =========================
-record(ao, "$(P):$(R):set_current") {
+record(ao, "$(P):$(R):CURRENT_SP") {
     field(DESC, "Channel Set Current")
     field(EGU, "A")
     field(PREC, "0")
     field(DRVL, "0")
     field(DRVH, "$(IMAX)")
-    field(FLNK, "$(P):$(R):calc_current_raw")
+    field(FLNK, "$(P):$(R):CALC_CURRENT_RAW")
 }
-record(calcout, "$(P):$(R):calc_current_raw") {
+record(calcout, "$(P):$(R):CALC_CURRENT_RAW") {
     field(DESC, "Channel Set Current")
     field(INPA, "$(P):$(R):set_current")
     field(CALC, "(A * 32767)/$(IMAX)")
-    field(OUT,"$(P):$(R):set_current_raw")
-    field(FLNK, "$(P):$(R):set_current_raw")
+    field(OUT,"$(P):$(R):RAW_CURRENT_SP")
+    field(FLNK, "$(P):$(R):RAW_CURRENT_SP")
 }
 
 
-record(ao, "$(P):$(R):set_current_raw") {
+record(ao, "$(P):$(R):RAW_CURRENT_SP") {
     field(DESC, "Channel Set Current")
     field(DTYP, "asynInt32")
     field(OUT, "@asyn($(WPORT),2,$(TIMEOUT))MODBUS_DATA")
@@ -74,24 +74,24 @@ record(ao, "$(P):$(R):set_current_raw") {
 # =========================
 # Channel Set Stewrate (0x0007)
 # =========================
-record(ao, "$(P):$(R):slewrate") {
+record(ao, "$(P):$(R):SLEWRATE_SP") {
     field(DESC, "Channel Set Stewrate")
     field(PREC, "0")
     field(DRVL, "0")
     field(DRVH, "$(IMAX)")
-    field(FLNK, "$(P):$(R):calc_slewrate_raw")
+    field(FLNK, "$(P):$(R):CALC_SLEWRATE_RAW")
 }
 
-record(calcout, "$(P):$(R):calc_slewrate_raw") {
+record(calcout, "$(P):$(R):CALC_SLEWRATE_RAW") {
     field(DESC, "Channel Set slewrate")
     field(INPA, "$(P):$(R):slewrate")
     field(CALC, "(A * 32767)/$(IMAX)")
-    field(OUT,"$(P):$(R):set_slewrate_raw")
-    field(FLNK, "$(P):$(R):set_slewrate_raw")
+    field(OUT,"$(P):$(R):RAW_SLEWRATE_SP")
+    field(FLNK, "$(P):$(R):RAW_SLEWRATE_SP")
 }
 
 
-record(ao, "$(P):$(R):set_slewrate_raw") {
+record(ao, "$(P):$(R):RAW_SLEWRATE_SP") {
     field(DESC, "Channel Set slewrate")
     field(DTYP, "asynInt32")
     field(OUT, "@asyn($(WPORT),3,$(TIMEOUT))MODBUS_DATA")
@@ -104,7 +104,7 @@ record(ao, "$(P):$(R):set_slewrate_raw") {
 # Statuses Power sun. (0x000A)
 # =========================
 
-record(ai, "$(P):$(R):state_raw_rb") {
+record(ai, "$(P):$(R):RAW_STATE_RB") {
     field(DESC, "Raw State")
     field(DTYP, "asynInt32")
     field(INP, "@asyn($(PORT),6,$(TIMEOUT))MODBUS_DATA")
@@ -113,7 +113,7 @@ record(ai, "$(P):$(R):state_raw_rb") {
 
 
 
-record(ai, "$(P):$(R):state_raw2_rb") {
+record(ai, "$(P):$(R):RAW_STATE2_RB") {
     field(DESC, "Raw State")
     field(DTYP, "asynInt32")
     field(INP, "@asyn($(PORT),11,$(TIMEOUT))MODBUS_DATA")
@@ -137,17 +137,17 @@ record(ai, "$(P):$(R):VMAX") {
     field(PINI,"YES")
     field(VAL,$(VMAX))
 }
-record(ai, "$(P):$(R):current_raw_rb") {
+record(ai, "$(P):$(R):RAW_CURRENT_RB") {
     field(DESC, "Output current readback")
     field(DTYP, "asynInt32")
     field(INP, "@asyn($(PORT),7,$(TIMEOUT))MODBUS_DATA")
     field(SCAN, "1 second")
 }
 
-record(calc, "$(P):$(R):current_rb")
+record(calc, "$(P):$(R):CURRENT_RB")
 {
     field(DESC, "current_rb")
-    field(INPA, "$(P):$(R):current_raw_rb")
+    field(INPA, "$(P):$(R):RAW_CURRENT_RB")
     field(INPB, "$(P):$(R):IMAX")
     field(CALC, "(A / 32767) * B")
     field(PREC, "8")
@@ -163,16 +163,16 @@ record(calc, "$(P):$(R):current_rb")
 # =========================
 # Output voltage readback (0x000C)
 # =========================
-record(ai, "$(P):$(R):voltage_raw_rb") {
+record(ai, "$(P):$(R):RAW_VOLTAGE_RB") {
     field(DESC, "Output voltage readback")
     field(DTYP, "asynInt32")
     field(INP, "@asyn($(PORT),8,$(TIMEOUT))MODBUS_DATA")
     field(SCAN, "1 second")
 }
-record(calc, "$(P):$(R):voltage_rb")
+record(calc, "$(P):$(R):VOLTAGE_RB")
 {
     field(DESC, "voltage_rb")
-    field(INPB, "$(P):$(R):voltage_raw_rb")
+    field(INPB, "$(P):$(R):RAW_VOLTAGE_RB")
     field(CALC, "(B / 32767) * $(VMAX)")
     field(PREC, "8")
     field(SCAN, "1 second")
@@ -180,7 +180,7 @@ record(calc, "$(P):$(R):voltage_rb")
 # =========================
 # Output earth current readback (0x000D)
 # =========================
-record(ai, "$(P):$(R):earth_current_rb") {
+record(ai, "$(P):$(R):EARTH_CURRENT_RB") {
     field(DESC, "Output earth current readback")
     field(DTYP, "asynInt32")
     field(INP, "@asyn($(PORT),9,$(TIMEOUT))MODBUS_DATA")
@@ -195,7 +195,7 @@ record(ai, "$(P):$(R):earth_current_rb") {
 # =========================
 # Set current readback (0x000E)
 # =========================
-record(ai, "$(P):$(R):set_current_rb") {
+record(ai, "$(P):$(R):SET_CURRENT_RB") {
     field(DESC, "Set current readback")
     field(DTYP, "asynInt32")
     field(INP, "@asyn($(PORT),10,$(TIMEOUT))MODBUS_DATA")
@@ -224,7 +224,7 @@ record(ai, "$(P):$(R):set_current_rb") {
 # =========================
 # Command Power suo. (all bits)
 # =========================
-record(ao, "$(P):$(R):cmd") {
+record(ao, "$(P):$(R):STATE_SP") {
     field(DESC, "Command Power suo. (all bits)")
     field(DTYP, "asynInt32")
     field(OUT, "@asyn($(WPORT),0,$(TIMEOUT))MODBUS_DATA")
