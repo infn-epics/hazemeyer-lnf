@@ -1,52 +1,9 @@
 # hz_map_generated.db - auto-generated from hz.map
 
 # =========================
-# Command Power suo. (0x0004)
-# =========================
-# record(bo, "$(P):$(R):power_off") {
-#     field(DESC, "Command Power Off")
-#     field(DTYP, "asynInt32")
-#     field(OUT, "@asyn($(PORT),4,$(TIMEOUT))MODBUS_DATA")
-#     field(ZNAM, "No")
-#     field(ONAM, "Power Off")
-# }
-
-# record(bo, "$(P):$(R):power_on") {
-#     field(DESC, "Command Power On")
-#     field(DTYP, "asynInt32")
-#     field(OUT, "@asyn($(PORT),4,$(TIMEOUT))MODBUS_DATA")
-#     field(ZNAM, "No")
-#     field(ONAM, "Power On")
-# }
-
-# record(bo, "$(P):$(R):reset") {
-#     field(DESC, "Command Reset")
-#     field(DTYP, "asynInt32")
-#     field(OUT, "@asyn($(PORT),4,$(TIMEOUT))MODBUS_DATA")
-#     field(ZNAM, "No")
-#     field(ONAM, "Reset")
-# }
-
-# record(bo, "$(P):$(R):rampstart") {
-#     field(DESC, "Command Rampstart")
-#     field(DTYP, "asynInt32")
-#     field(OUT, "@asyn($(PORT),4,$(TIMEOUT))MODBUS_DATA")
-#     field(ZNAM, "No")
-#     field(ONAM, "Rampstart")
-# }
-
-# record(bo, "$(P):$(R):global_off") {
-#     field(DESC, "Command Global Off")
-#     field(DTYP, "asynInt32")
-#     field(OUT, "@asyn($(PORT),4,$(TIMEOUT))MODBUS_DATA")
-#     field(ZNAM, "No")
-#     field(ONAM, "Global Off")
-# }
-
-# =========================
 # Channel Set current (0x0006)
 # =========================
-record(ao, "$(P):$(R):CURRENT_SP") {
+record(ao, "$(P):$(R):HZ_CURRENT_SP") {
     field(DESC, "Channel Set Current")
     field(EGU, "A")
     field(PREC, "0")
@@ -104,20 +61,21 @@ record(ao, "$(P):$(R):RAW_SLEWRATE_SP") {
 # Statuses Power sun. (0x000A)
 # =========================
 
-record(ai, "$(P):$(R):RAW_STATE_RB") {
+record(mbbiDirect, "$(P):$(R):RAW_STATE_RB") {
     field(DESC, "Raw State")
-    field(DTYP, "asynInt32")
+    field(DTYP, "asynUInt32Digital")
     field(INP, "@asyn($(PORT),6,$(TIMEOUT))MODBUS_DATA")
     field(SCAN, "1 second")
+    field(FLNK, "$(P):$(R):RAW_STATE2_RB")
 }
 
 
 
-record(ai, "$(P):$(R):RAW_STATE2_RB") {
+record(mbbiDirect, "$(P):$(R):RAW_STATE2_RB") {
     field(DESC, "Raw State")
-    field(DTYP, "asynInt32")
+    field(DTYP, "asynUInt32Digital")
     field(INP, "@asyn($(PORT),11,$(TIMEOUT))MODBUS_DATA")
-    field(SCAN, "1 second")
+    field(FLNK, "$(P):$(R):state_calc")
 }
 
 
@@ -224,8 +182,177 @@ record(ai, "$(P):$(R):SET_CURRENT_RB") {
 # =========================
 # Command Power suo. (all bits)
 # =========================
-record(ao, "$(P):$(R):STATE_SP") {
+record(ao, "$(P):$(R):RAW_STATE_SP") {
     field(DESC, "Command Power suo. (all bits)")
     field(DTYP, "asynInt32")
     field(OUT, "@asyn($(WPORT),0,$(TIMEOUT))MODBUS_DATA")
 }
+
+
+### unimag interface
+record(ao, "$(P):$(R):CURRENT_SP") {
+    field(DESC, "Channel Set Current")
+    field(EGU, "A")
+    field(PREC, "0")
+    field(DRVL, "0")
+    field(DRVH, "$(IMAX)")
+    field(FLNK, "$(P):$(R):CALC_CURRENT_RAW")
+}
+
+
+record(mbbo, "$(P):$(R):STATE_SP") {
+    field(DESC, "State setpoint")
+    field(ZRVL, "0")
+    field(ZRST, "OFF")
+    field(ONVL, "1")
+    field(ONST, "ON")
+    field(TWVL, "2")
+    field(TWST, "STANDBY")
+    field(THVL, "3")
+    field(THST, "RESET")
+    field(FRVL, "4")
+    field(FRST, "INTERLOCK")
+    field(FVVL, "5")
+    field(FVST, "ERROR")
+    field(FLNK, "$(P):$(R):state_to_enable")
+}
+
+record (seq, "$(P):$(R):state_to_enable") {
+    field(DESC, "State to enable")
+    field(DOL0, "1")
+    field(LNK0, "$(P):$(R):RAW_STATE_SP")
+
+    field(DOL1, "2")
+    field(LNK1, "$(P):$(R):RAW_STATE_SP")
+
+    field(DOL2, "8")
+    field(LNK2, "$(P):$(R):RAW_STATE_SP")
+
+    field(SELM,"Specified")
+
+    field(SELL, "$(P):$(R):STATE_SP")
+    field(SCAN, "Passive")
+}
+
+record(mbbi, "$(P):$(R):STATE_RB") {
+    field(DESC, "State readback")
+    field(SCAN,"Passive")
+    field(ZRVL, "0")
+    field(ZRST, "OFF")
+    field(ONVL, "1")
+    field(ONST, "ON")
+    field(TWVL, "2")
+    field(TWST, "STANDBY")
+    field(THVL, "3")
+    field(THST, "RESET")
+    field(FRVL, "4")
+    field(FRST, "INTERLOCK")
+    field(FRSV, "MAJOR")
+    field(FVVL, "5")
+    field(FVST, "ERROR")
+    field(FVSV, "MAJOR")
+}
+
+record(bi, "$(P):$(R):ALL_FAULT") {
+    field(DESC, "Operational status")
+    field(INP, "$(P):$(R):RAW_STATE_RB.B3 MS CP")
+    field(ZNAM, "OK")
+    field(ONAM, "ERROR")
+    field(ZSV, "NO_ALARM")
+    field(OSV, "MAJOR")
+}
+
+record(bi, "$(P):$(R):OPERATIONAL") {
+    field(DESC, "Operational status")
+    field(INP, "$(P):$(R):RAW_STATE_RB.B0 MS CP")
+    field(ZNAM, "ON")
+    field(ONAM, "OFF")
+}
+
+
+record(calcout, "$(P):$(R):state_calc") {
+    field(DESC, "Calculate state from status bits")
+    field(INPA, "$(P):$(R):OPERATIONAL")
+    field(INPB, "$(P):$(R):ALL_FAULT")
+    field(CALC, "B=1 ? 4 : (A=1 ? 1 : 2 )")
+    field(OUT, "$(P):$(R):STATE_RB PP")
+    field(OOPT, "Every Time")
+}
+
+#####
+record(ao, "$(P):$(R):CURRENT_SP") {
+    field(DESC, "User-facing current setpoint")
+    field(VAL, "0")
+    field(OUT, "$(P):$(R):current_sequence.PROC")
+}
+record(calcout, "$(P):$(R):current_sequence") {
+    field(DESC, "Start ramp if GlobalControl is 4 or 16")
+    field(INPB, "$(P):$(R):RAW_STATE_SP")
+    field(CALC, "((B==16)?1:0)")
+    field(OOPT, "When Non-zero")
+    field(OUT, "$(P):$(R):set_to_2.PROC PP")
+}
+record(calcout, "$(P):$(R):set_to_2") {
+    field(DESC, "Force GlobalControl to 2")
+    field(CALC, "2")
+    field(OUT, "$(P):$(R):STATE_SP")
+    field(FLNK, "$(P):$(R):write_current")
+}
+record(calcout, "$(P):$(R):write_current") {
+    field(DESC, "Write real setpoint")
+    field(INPA, "$(P):$(R):CURRENT_SP.VAL")  # Prende il valore utente
+    field(CALC, "A")
+    field(ODLY, "1.2")
+    field(OUT, "$(P):$(R):Current_SP PP")  # Vero record di output
+    field(FLNK, "$(P):$(R):start_ramp")
+}
+record(calcout, "$(P):$(R):start_ramp") {
+    field(DESC, "Set GlobalControl to 16 (start ramp)")
+    field(CALC, "16")
+    field(ODLY, "1.0")
+    field(OUT, "$(P):$(R):STATE_SP")
+}
+ 
+######
+ 
+ 
+# }
+# record(mbbi, "$(P):$(R):STATE_RB") {
+#     field(DESC, "State readback")
+#     field(SCAN,"Passive")
+#     field(ZRVL, "0")
+#     field(ZRST, "OFF")
+#     field(ONVL, "1")
+#     field(ONST, "ON")
+#     field(TWVL, "2")
+#     field(TWST, "STANDBY")
+#     field(THVL, "3")
+#     field(THST, "RESET")
+#     field(FRVL, "4")
+#     field(FRST, "INTERLOCK")
+#     field(FRSV, "MAJOR")
+#     field(FVVL, "5")
+#     field(FVST, "ERROR")
+#     field(FVSV, "MAJOR")
+# }
+ 
+
+ 
+# ## State setpoint
+# record(mbbo, "$(P):$(R):STATE_SP") {
+#     field(DESC, "State setpoint")
+#     field(ZRVL, "0")
+#     field(ZRST, "OFF")
+#     field(ONVL, "1")
+#     field(ONST, "ON")
+#     field(TWVL, "2")
+#     field(TWST, "STANDBY")
+#     field(THVL, "3")
+#     field(THST, "RESET")
+#     field(FRVL, "4")
+#     field(FRST, "INTERLOCK")
+#     field(FVVL, "5")
+#     field(FVST, "ERROR")
+#     field(FLNK, "$(P):$(R):state_to_enable")
+# }
+ 

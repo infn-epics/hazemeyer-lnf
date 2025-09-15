@@ -50,10 +50,6 @@ Load database
 dbLoadRecords("../../db/hz.db", "P=SPARC:MAG,R=AC1SOL02,PORT=HAZMEYER_AC1SOL02_PORT_RAO, WPORT=HAZMEYER_AC1SOL02_PORT_WAO,IMAX=200,VMAX=110 ,TIMEOUT=2000")
 
 
-Load database
-dbLoadRecords("../../db/unimag.db", "P=SPARC:MAG,R=AC1SOL02")
-# Oppure usa il file di sostituzione
-# dbLoadTemplate("db/PowerSupply.substitutions")
 
 # Inizializza la IOC
 iocInit
