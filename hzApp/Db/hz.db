@@ -1,0 +1,348 @@
+# hz_map_generated.db - auto-generated from hz.map
+
+# =========================
+# Channel Set current (0x0006)
+# =========================
+record(ao, "$(P):$(R):CURRENT_SP") {
+    field(DESC, "Channel Set Current")
+    field(EGU, "A")
+    field(PREC, "0")
+    field(DRVL, "0")
+    field(DRVH, "$(IMAX)")
+    field(FLNK, "$(P):$(R):CALC_CURRENT_RAW")
+}
+
+
+
+record(calcout, "$(P):$(R):CALC_CURRENT_RAW") {
+    field(DESC, "Channel Set Current")
+    field(INPA, "$(P):$(R):CURRENT_SP")
+    field(CALC, "(A * 32767)/$(IMAX)")
+    field(OUT,"$(P):$(R):RAW_CURRENT_SP")
+    field(FLNK, "$(P):$(R):RAW_CURRENT_SP")
+}
+
+
+record(ao, "$(P):$(R):RAW_CURRENT_SP") {
+    field(DESC, "Channel Set Current")
+    field(DTYP, "asynInt32")
+    field(OUT, "@asyn($(WPORT),2,$(TIMEOUT))MODBUS_DATA")
+    field(PREC, "0")
+    field(FLNK, "$(P):$(R):AUTO_START_RAMP")
+}
+
+record(calcout, "$(P):$(R):AUTO_START_RAMP") {
+    field(DESC, "Auto Start Ramp")
+    field(CALC, "1")
+    field(OUT, "$(P):$(R):RAW_STATE_SP.B4 PP")
+    field(FLNK, "$(P):$(R):RAW_STATE_SP")
+}
+
+# =========================
+# Channel Set Stewrate (0x0007)
+# =========================
+record(ao, "$(P):$(R):SLEWRATE_SP") {
+    field(DESC, "Channel Set Stewrate")
+    field(PREC, "0")
+    field(DRVL, "0")
+    field(DRVH, "$(IMAX)")
+    field(FLNK, "$(P):$(R):CALC_SLEWRATE_RAW")
+}
+
+record(calcout, "$(P):$(R):CALC_SLEWRATE_RAW") {
+    field(DESC, "Channel Set slewrate")
+    field(INPA, "$(P):$(R):slewrate")
+    field(CALC, "(A * 32767)/$(IMAX)")
+    field(OUT,"$(P):$(R):RAW_SLEWRATE_SP")
+    field(FLNK, "$(P):$(R):RAW_SLEWRATE_SP")
+}
+
+
+record(ao, "$(P):$(R):RAW_SLEWRATE_SP") {
+    field(DESC, "Channel Set slewrate")
+    field(DTYP, "asynInt32")
+    field(OUT, "@asyn($(WPORT),3,$(TIMEOUT))MODBUS_DATA")
+    field(PREC, "0")
+    
+}
+
+
+# =========================
+# Statuses Power sun. (0x000A)
+# =========================
+
+record(mbbiDirect, "$(P):$(R):RAW_STATE_RB") {
+    field(DESC, "Raw State")
+    field(DTYP, "asynUInt32Digital")
+    field(INP, "@asynMask($(PORT) 6 0xFFFF $(TIMEOUT))MODBUS_DATA")
+    # field(INP, "@asynMask(HZ_STATUS_A 0 0xFFFF 1000)")
+    field(SCAN, "1 second")
+    field(FLNK, "$(P):$(R):RAW_STATE2_RB")
+}
+
+
+
+record(mbbiDirect, "$(P):$(R):RAW_STATE2_RB") {
+    field(DESC, "Raw State")
+    field(DTYP, "asynUInt32Digital")
+    field(INP, "@asynMask($(PORT) 11 0xFFFF $(TIMEOUT))MODBUS_DATA")
+    field(NOBT, "16")
+    field(FLNK, "$(P):$(R):state_calc")
+}
+
+
+# =========================
+# Output current readback (0x000B)
+# =========================
+
+record(ai, "$(P):$(R):IMAX") {
+    field(DESC, "Max current")
+    field(SCAN, "Passive")
+    field(PINI,"YES")
+    field(VAL,$(IMAX))
+}
+record(ai, "$(P):$(R):VMAX") {
+    field(DESC, "Max voltage")
+    field(SCAN, "Passive")
+    field(PINI,"YES")
+    field(VAL,$(VMAX))
+}
+record(ai, "$(P):$(R):RAW_CURRENT_RB") {
+    field(DESC, "Output current readback")
+    field(DTYP, "asynInt32")
+    field(INP, "@asyn($(PORT),7,$(TIMEOUT))MODBUS_DATA")
+    field(SCAN, "1 second")
+}
+
+record(calc, "$(P):$(R):CURRENT_RB")
+{
+    field(DESC, "current_rb")
+    field(INPA, "$(P):$(R):RAW_CURRENT_RB")
+    field(INPB, "$(P):$(R):IMAX")
+    field(CALC, "(A / 32767) * B")
+    field(PREC, "8")
+    field(SCAN, "1 second")
+}
+
+# =========================
+# Output voltage readback (0x000C)
+# =========================
+record(ai, "$(P):$(R):RAW_VOLTAGE_RB") {
+    field(DESC, "Output voltage readback")
+    field(DTYP, "asynInt32")
+    field(INP, "@asyn($(PORT),8,$(TIMEOUT))MODBUS_DATA")
+    field(SCAN, "1 second")
+}
+record(calc, "$(P):$(R):VOLTAGE_RB")
+{
+    field(DESC, "voltage_rb")
+    field(INPB, "$(P):$(R):RAW_VOLTAGE_RB")
+    field(CALC, "(B / 32767) * $(VMAX)")
+    field(PREC, "8")
+    field(SCAN, "1 second")
+}
+# =========================
+# Output earth current readback (0x000D)
+# =========================
+record(ai, "$(P):$(R):EARTH_CURRENT_RB") {
+    field(DESC, "Output earth current readback")
+    field(DTYP, "asynInt32")
+    field(INP, "@asyn($(PORT),9,$(TIMEOUT))MODBUS_DATA")
+    field(LINR, "LINEAR")
+    field(ESLO, "1")
+    field(EGU, "mA")
+    field(PREC, "0")
+    field(LOPR, "0")
+    field(HOPR, "32767")
+}
+
+# =========================
+# Set current readback (0x000E)
+# =========================
+record(ai, "$(P):$(R):SET_CURRENT_RB") {
+    field(DESC, "Set current readback")
+    field(DTYP, "asynInt32")
+    field(INP, "@asyn($(PORT),10,$(TIMEOUT))MODBUS_DATA")
+    field(LINR, "LINEAR")
+    field(ESLO, "1")
+    field(EGU, "mA")
+    field(PREC, "0")
+    field(LOPR, "0")
+    field(HOPR, "32767")
+}
+
+
+# =========================
+# Command Power suo. (all bits)
+# =========================
+
+record(ao, "$(P):$(R):RAW_STATE_SP") {
+    field(DESC, "Command Power suo. (all bits)")
+    field(DTYP, "asynInt32")
+    field(OUT, "@asyn($(WPORT),0,$(TIMEOUT))MODBUS_DATA")
+}
+
+
+## unimag interface
+
+# START RAMP W JUST PRESSING ENTER
+
+record(calcout, "$(P):$(R):AUTO_START_RAMP") {
+    field(DESC, "Auto Start Ramp")
+    field(CALC, "1")
+    field(OUT, "$(P):$(R):RAW_STATE_SP.B4 PP")
+    field(FLNK, "$(P):$(R):RAW_STATE_SP")
+}
+
+#STATES ON UNIMAG
+
+record(mbbo, "$(P):$(R):STATE_SP") {
+    field(DESC, "State setpoint")
+    field(ZRVL, "0")
+    field(ZRST, "OFF")
+    field(ONVL, "1")
+    field(ONST, "ON")
+    field(TWVL, "2")
+    field(TWST, "STANDBY")
+    field(THVL, "3")
+    field(THST, "RESET")
+    field(FRVL, "4")
+    field(FRST, "INTERLOCK")
+    field(FVVL, "5")
+    field(FVST, "ERROR")
+    field(FLNK, "$(P):$(R):state_to_enable")
+}
+
+record (seq, "$(P):$(R):state_to_enable") {
+    field(DESC, "State to enable")
+
+    field(DOL1, "2")   # ON -> Power On (valore 2)
+    field(LNK1, "$(P):$(R):RAW_STATE_SP PP")
+
+    field(DOL2, "1")   # STANDBY -> Standby (valore 1) 
+    field(LNK2, "$(P):$(R):RAW_STATE_SP PP")
+
+    field(DOL3, "8")   # RESET -> Reset (valore 8)
+    field(LNK3, "$(P):$(R):RAW_STATE_SP PP")
+
+    field(SELM,"Specified")
+    field(SELL, "$(P):$(R):STATE_SP")
+    field(SCAN, "Passive")
+}
+
+record(mbbi, "$(P):$(R):STATE_RB") {
+    field(DESC, "State readback")
+    field(SCAN,"Passive")
+    field(ZRVL, "0")
+    field(ZRST, "OFF")
+    field(ONVL, "1")
+    field(ONST, "ON")
+    field(TWVL, "2")
+    field(TWST, "STANDBY")
+    field(THVL, "3")
+    field(THST, "RESET")
+    field(FRVL, "4")
+    field(FRST, "INTERLOCK")
+    field(FRSV, "MAJOR")
+    field(FVVL, "5")
+    field(FVST, "ERROR")
+    field(FVSV, "MAJOR")
+}
+
+record(bi, "$(P):$(R):ALL_FAULT") {
+    field(DESC, "Operational status")
+    field(INP, "$(P):$(R):RAW_STATE_RB.B3 MS CP")
+    field(ZNAM, "OK")
+    field(ONAM, "ERROR")
+    field(ZSV, "NO_ALARM")
+    field(OSV, "MAJOR")
+}
+
+record(bi, "$(P):$(R):OPERATIONAL") {
+    field(DESC, "Operational status")
+    field(INP, "$(P):$(R):RAW_STATE_RB.B0 MS CP")
+    field(ZNAM, "ON")
+    field(ONAM, "OFF")
+}
+
+
+record(calcout, "$(P):$(R):state_calc") {
+    field(DESC, "Calculate state from status bits")
+    field(INPA, "$(P):$(R):OPERATIONAL")
+    field(INPB, "$(P):$(R):ALL_FAULT")
+    field(CALC, "B=1 ? 4 : (A=1 ? 1 : 2 )")
+    field(OUT, "$(P):$(R):STATE_RB PP")
+    field(OOPT, "Every Time")
+}
+
+# TEST 
+# record(ao, "$(P):$(R):CURRENT_SP") {
+#     field(DESC, "User-facing current setpoint")
+#     field(VAL, "0")
+#     field(OUT, "$(P):$(R):set_to_2")
+# }
+# 
+# record(calcout, "$(P):$(R):set_to_2") {
+#     field(DESC, "Force GlobalControl to 2")
+#     field(CALC, "2")
+#     field(OUT, "$(P):$(R):STATE_SP")
+#     field(FLNK, "$(P):$(R):write_current")
+# }
+# record(calcout, "$(P):$(R):write_current") {
+#     field(DESC, "Write real setpoint")
+#     field(INPA, "$(P):$(R):CURRENT_SP.VAL")  # Prende il valore utente
+#     field(CALC, "A")
+#     field(ODLY, "1.2")
+#     field(OUT, "$(P):$(R):Current_SP PP")  # Vero record di output
+#     field(FLNK, "$(P):$(R):start_ramp")
+# }
+# record(calcout, "$(P):$(R):start_ramp") {
+#     field(DESC, "Set GlobalControl to 16 (start ramp)")
+#     field(CALC, "16")
+#     field(ODLY, "1.0")
+#     field(OUT, "$(P):$(R):STATE_SP")
+# }
+ 
+######
+ 
+ 
+# }
+# record(mbbi, "$(P):$(R):STATE_RB") {
+#     field(DESC, "State readback")
+#     field(SCAN,"Passive")
+#     field(ZRVL, "0")
+#     field(ZRST, "OFF")
+#     field(ONVL, "1")
+#     field(ONST, "ON")
+#     field(TWVL, "2")
+#     field(TWST, "STANDBY")
+#     field(THVL, "3")
+#     field(THST, "RESET")
+#     field(FRVL, "4")
+#     field(FRST, "INTERLOCK")
+#     field(FRSV, "MAJOR")
+#     field(FVVL, "5")
+#     field(FVST, "ERROR")
+#     field(FVSV, "MAJOR")
+# }
+ 
+
+ 
+# ## State setpoint
+# record(mbbo, "$(P):$(R):STATE_SP") {
+#     field(DESC, "State setpoint")
+#     field(ZRVL, "0")
+#     field(ZRST, "OFF")
+#     field(ONVL, "1")
+#     field(ONST, "ON")
+#     field(TWVL, "2")
+#     field(TWST, "STANDBY")
+#     field(THVL, "3")
+#     field(THST, "RESET")
+#     field(FRVL, "4")
+#     field(FRST, "INTERLOCK")
+#     field(FVVL, "5")
+#     field(FVST, "ERROR")
+#     field(FLNK, "$(P):$(R):state_to_enable")
+# }
+ 
