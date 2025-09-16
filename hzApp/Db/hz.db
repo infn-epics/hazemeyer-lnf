@@ -3,7 +3,7 @@
 # =========================
 # Channel Set current (0x0006)
 # =========================
-record(ao, "$(P):$(R):HZ_CURRENT_SP") {
+record(ao, "$(P):$(R):CURRENT_SP") {
     field(DESC, "Channel Set Current")
     field(EGU, "A")
     field(PREC, "0")
@@ -11,9 +11,12 @@ record(ao, "$(P):$(R):HZ_CURRENT_SP") {
     field(DRVH, "$(IMAX)")
     field(FLNK, "$(P):$(R):CALC_CURRENT_RAW")
 }
+
+
+
 record(calcout, "$(P):$(R):CALC_CURRENT_RAW") {
     field(DESC, "Channel Set Current")
-    field(INPA, "$(P):$(R):HZ_CURRENT_SP")
+    field(INPA, "$(P):$(R):CURRENT_SP")
     field(CALC, "(A * 32767)/$(IMAX)")
     field(OUT,"$(P):$(R):RAW_CURRENT_SP")
     field(FLNK, "$(P):$(R):RAW_CURRENT_SP")
@@ -25,8 +28,15 @@ record(ao, "$(P):$(R):RAW_CURRENT_SP") {
     field(DTYP, "asynInt32")
     field(OUT, "@asyn($(WPORT),2,$(TIMEOUT))MODBUS_DATA")
     field(PREC, "0")
+    field(FLNK, "$(P):$(R):AUTO_START_RAMP")
 }
 
+record(calcout, "$(P):$(R):AUTO_START_RAMP") {
+    field(DESC, "Auto Start Ramp")
+    field(CALC, "1")
+    field(OUT, "$(P):$(R):RAW_STATE_SP.B4 PP")
+    field(FLNK, "$(P):$(R):RAW_STATE_SP")
+}
 
 # =========================
 # Channel Set Stewrate (0x0007)
@@ -114,8 +124,6 @@ record(calc, "$(P):$(R):CURRENT_RB")
     field(SCAN, "1 second")
 }
 
-
-
 # =========================
 # Output voltage readback (0x000C)
 # =========================
@@ -163,23 +171,11 @@ record(ai, "$(P):$(R):SET_CURRENT_RB") {
     field(HOPR, "32767")
 }
 
-# # =========================
-# # Faults 2 Power suo. (0x0010)
-# # =========================
-# record(bi, "$(P):$(R):fault_residual_alarm") {
-#     field(DESC, "Fault Residual alarm")
-#     field(DTYP, "asynInt32")
-#     field(INP, "@asyn($(PORT),16,$(TIMEOUT))MODBUS_DATA")
-#     field(ZNAM, "OK")
-#     field(ONAM, "Fault")
-# }
-# # ...repeat for Fuses capacitors, Low freq filter choke over-temp, High-freq transformer over-temp, High-freq filter choke over-temp 1, High-freq filter choke over-temp 2, Heatsink over-temp, Ambient over-temp...
-
-
 
 # =========================
 # Command Power suo. (all bits)
 # =========================
+
 record(ao, "$(P):$(R):RAW_STATE_SP") {
     field(DESC, "Command Power suo. (all bits)")
     field(DTYP, "asynInt32")
@@ -188,15 +184,17 @@ record(ao, "$(P):$(R):RAW_STATE_SP") {
 
 
 ## unimag interface
-record(ao, "$(P):$(R):CURRENT_SP") {
-    field(DESC, "Channel Set Current")
-    field(EGU, "A")
-    field(PREC, "0")
-    field(DRVL, "0")
-    field(DRVH, "$(IMAX)")
-    field(FLNK, "$(P):$(R):CALC_CURRENT_RAW")
+
+# START RAMP W JUST PRESSING ENTER
+
+record(calcout, "$(P):$(R):AUTO_START_RAMP") {
+    field(DESC, "Auto Start Ramp")
+    field(CALC, "1")
+    field(OUT, "$(P):$(R):RAW_STATE_SP.B4 PP")
+    field(FLNK, "$(P):$(R):RAW_STATE_SP")
 }
 
+#STATES ON UNIMAG
 
 record(mbbo, "$(P):$(R):STATE_SP") {
     field(DESC, "State setpoint")
@@ -217,17 +215,17 @@ record(mbbo, "$(P):$(R):STATE_SP") {
 
 record (seq, "$(P):$(R):state_to_enable") {
     field(DESC, "State to enable")
-    field(DOL0, "1")
-    field(LNK0, "$(P):$(R):RAW_STATE_SP")
 
-    field(DOL1, "2")
-    field(LNK1, "$(P):$(R):RAW_STATE_SP")
+    field(DOL1, "2")   # ON -> Power On (valore 2)
+    field(LNK1, "$(P):$(R):RAW_STATE_SP PP")
 
-    field(DOL2, "8")
-    field(LNK2, "$(P):$(R):RAW_STATE_SP")
+    field(DOL2, "1")   # STANDBY -> Standby (valore 1) 
+    field(LNK2, "$(P):$(R):RAW_STATE_SP PP")
+
+    field(DOL3, "8")   # RESET -> Reset (valore 8)
+    field(LNK3, "$(P):$(R):RAW_STATE_SP PP")
 
     field(SELM,"Specified")
-
     field(SELL, "$(P):$(R):STATE_SP")
     field(SCAN, "Passive")
 }
@@ -277,19 +275,13 @@ record(calcout, "$(P):$(R):state_calc") {
     field(OOPT, "Every Time")
 }
 
-# #####
+# TEST 
 # record(ao, "$(P):$(R):CURRENT_SP") {
 #     field(DESC, "User-facing current setpoint")
 #     field(VAL, "0")
-#     field(OUT, "$(P):$(R):current_sequence.PROC")
+#     field(OUT, "$(P):$(R):set_to_2")
 # }
-# record(calcout, "$(P):$(R):current_sequence") {
-#     field(DESC, "Start ramp if GlobalControl is 4 or 16")
-#     field(INPB, "$(P):$(R):RAW_STATE_SP")
-#     field(CALC, "((B==16)?1:0)")
-#     field(OOPT, "When Non-zero")
-#     field(OUT, "$(P):$(R):set_to_2.PROC PP")
-# }
+# 
 # record(calcout, "$(P):$(R):set_to_2") {
 #     field(DESC, "Force GlobalControl to 2")
 #     field(CALC, "2")
