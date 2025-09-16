@@ -22,32 +22,32 @@ drvModbusAsynConfigure("HAZMEYER_GUN01_PORT_WAO", "Hazemeyer_Asyn", 6,    16, 4,
 ## Read holding registers
 drvModbusAsynConfigure("HAZMEYER_GUN01_PORT_RAO", "Hazemeyer_Asyn", 6,    3, 4, 12, 0, 1000, "HAZEMEYER")
 
-# Load database
+#Load database
 dbLoadRecords("../../db/hz.db", "P=SPARC:MAG,R=GUNSOL01,PORT=HAZMEYER_GUN01_PORT_RAO, WPORT=HAZMEYER_GUN01_PORT_WAO ,IMAX=200,VMAX=110,TIMEOUT=2000")
 
 
 
 
 ## Write holding registers slave 7
-drvModbusAsynConfigure("HAZMEYER_AC1SOL01_PORT_WAO", "Hazemeyer_Asyn", 7,    16, 4, 4, 0, 1000, "HAZEMEYER")
+# drvModbusAsynConfigure("HAZMEYER_AC1SOL01_PORT_WAO", "Hazemeyer_Asyn", 7,    16, 4, 4, 0, 1000, "HAZEMEYER")
 
-## Read holding registers
-drvModbusAsynConfigure("HAZMEYER_AC1SOL01_PORT_RAO", "Hazemeyer_Asyn", 7,    3, 4, 12, 0, 1000, "HAZEMEYER")
+# ## Read holding registers
+# drvModbusAsynConfigure("HAZMEYER_AC1SOL01_PORT_RAO", "Hazemeyer_Asyn", 7,    3, 4, 12, 0, 1000, "HAZEMEYER")
 
-# Load database
-dbLoadRecords("../../db/hz.db", "P=SPARC:MAG,R=AC1SOL01,PORT=HAZMEYER_AC1SOL01_PORT_RAO, WPORT=HAZMEYER_AC1SOL01_PORT_WAO,IMAX=200,VMAX=110 ,TIMEOUT=2000")
-
-
+# # Load database
+# dbLoadRecords("../../db/hz.db", "P=SPARC:MAG,R=AC1SOL01,PORT=HAZMEYER_AC1SOL01_PORT_RAO, WPORT=HAZMEYER_AC1SOL01_PORT_WAO,IMAX=200,VMAX=110 ,TIMEOUT=2000")
 
 
-# Write holding registers slave 8
-drvModbusAsynConfigure("HAZMEYER_AC1SOL02_PORT_WAO", "Hazemeyer_Asyn", 8,    16, 4, 4, 0, 1000, "HAZEMEYER")
 
-# Read holding registers
-drvModbusAsynConfigure("HAZMEYER_AC1SOL02_PORT_RAO", "Hazemeyer_Asyn", 8,    3, 4, 12, 0, 1000, "HAZEMEYER")
 
-Load database
-dbLoadRecords("../../db/hz.db", "P=SPARC:MAG,R=AC1SOL02,PORT=HAZMEYER_AC1SOL02_PORT_RAO, WPORT=HAZMEYER_AC1SOL02_PORT_WAO,IMAX=200,VMAX=110 ,TIMEOUT=2000")
+# # Write holding registers slave 8
+# drvModbusAsynConfigure("HAZMEYER_AC1SOL02_PORT_WAO", "Hazemeyer_Asyn", 8,    16, 4, 4, 0, 1000, "HAZEMEYER")
+
+# # Read holding registers
+# drvModbusAsynConfigure("HAZMEYER_AC1SOL02_PORT_RAO", "Hazemeyer_Asyn", 8,    3, 4, 12, 0, 1000, "HAZEMEYER")
+
+# #Load database
+# dbLoadRecords("../../db/hz.db", "P=SPARC:MAG,R=AC1SOL02,PORT=HAZMEYER_AC1SOL02_PORT_RAO, WPORT=HAZMEYER_AC1SOL02_PORT_WAO,IMAX=200,VMAX=110 ,TIMEOUT=2000")
 
 
 

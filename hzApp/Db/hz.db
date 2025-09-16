@@ -13,7 +13,7 @@ record(ao, "$(P):$(R):HZ_CURRENT_SP") {
 }
 record(calcout, "$(P):$(R):CALC_CURRENT_RAW") {
     field(DESC, "Channel Set Current")
-    field(INPA, "$(P):$(R):set_current")
+    field(INPA, "$(P):$(R):HZ_CURRENT_SP")
     field(CALC, "(A * 32767)/$(IMAX)")
     field(OUT,"$(P):$(R):RAW_CURRENT_SP")
     field(FLNK, "$(P):$(R):RAW_CURRENT_SP")
@@ -64,7 +64,8 @@ record(ao, "$(P):$(R):RAW_SLEWRATE_SP") {
 record(mbbiDirect, "$(P):$(R):RAW_STATE_RB") {
     field(DESC, "Raw State")
     field(DTYP, "asynUInt32Digital")
-    field(INP, "@asyn($(PORT),6,$(TIMEOUT))MODBUS_DATA")
+    field(INP, "@asynMask($(PORT) 6 0xFFFF $(TIMEOUT))MODBUS_DATA")
+    # field(INP, "@asynMask(HZ_STATUS_A 0 0xFFFF 1000)")
     field(SCAN, "1 second")
     field(FLNK, "$(P):$(R):RAW_STATE2_RB")
 }
@@ -74,7 +75,8 @@ record(mbbiDirect, "$(P):$(R):RAW_STATE_RB") {
 record(mbbiDirect, "$(P):$(R):RAW_STATE2_RB") {
     field(DESC, "Raw State")
     field(DTYP, "asynUInt32Digital")
-    field(INP, "@asyn($(PORT),11,$(TIMEOUT))MODBUS_DATA")
+    field(INP, "@asynMask($(PORT) 11 0xFFFF $(TIMEOUT))MODBUS_DATA")
+    field(NOBT, "16")
     field(FLNK, "$(P):$(R):state_calc")
 }
 
@@ -111,10 +113,6 @@ record(calc, "$(P):$(R):CURRENT_RB")
     field(PREC, "8")
     field(SCAN, "1 second")
 }
-
-# =========================
-# FAULTS 1 POWER SUPPLY (0x000F)
-# =========================
 
 
 
@@ -189,7 +187,7 @@ record(ao, "$(P):$(R):RAW_STATE_SP") {
 }
 
 
-### unimag interface
+## unimag interface
 record(ao, "$(P):$(R):CURRENT_SP") {
     field(DESC, "Channel Set Current")
     field(EGU, "A")
@@ -279,39 +277,39 @@ record(calcout, "$(P):$(R):state_calc") {
     field(OOPT, "Every Time")
 }
 
-#####
-record(ao, "$(P):$(R):CURRENT_SP") {
-    field(DESC, "User-facing current setpoint")
-    field(VAL, "0")
-    field(OUT, "$(P):$(R):current_sequence.PROC")
-}
-record(calcout, "$(P):$(R):current_sequence") {
-    field(DESC, "Start ramp if GlobalControl is 4 or 16")
-    field(INPB, "$(P):$(R):RAW_STATE_SP")
-    field(CALC, "((B==16)?1:0)")
-    field(OOPT, "When Non-zero")
-    field(OUT, "$(P):$(R):set_to_2.PROC PP")
-}
-record(calcout, "$(P):$(R):set_to_2") {
-    field(DESC, "Force GlobalControl to 2")
-    field(CALC, "2")
-    field(OUT, "$(P):$(R):STATE_SP")
-    field(FLNK, "$(P):$(R):write_current")
-}
-record(calcout, "$(P):$(R):write_current") {
-    field(DESC, "Write real setpoint")
-    field(INPA, "$(P):$(R):CURRENT_SP.VAL")  # Prende il valore utente
-    field(CALC, "A")
-    field(ODLY, "1.2")
-    field(OUT, "$(P):$(R):Current_SP PP")  # Vero record di output
-    field(FLNK, "$(P):$(R):start_ramp")
-}
-record(calcout, "$(P):$(R):start_ramp") {
-    field(DESC, "Set GlobalControl to 16 (start ramp)")
-    field(CALC, "16")
-    field(ODLY, "1.0")
-    field(OUT, "$(P):$(R):STATE_SP")
-}
+# #####
+# record(ao, "$(P):$(R):CURRENT_SP") {
+#     field(DESC, "User-facing current setpoint")
+#     field(VAL, "0")
+#     field(OUT, "$(P):$(R):current_sequence.PROC")
+# }
+# record(calcout, "$(P):$(R):current_sequence") {
+#     field(DESC, "Start ramp if GlobalControl is 4 or 16")
+#     field(INPB, "$(P):$(R):RAW_STATE_SP")
+#     field(CALC, "((B==16)?1:0)")
+#     field(OOPT, "When Non-zero")
+#     field(OUT, "$(P):$(R):set_to_2.PROC PP")
+# }
+# record(calcout, "$(P):$(R):set_to_2") {
+#     field(DESC, "Force GlobalControl to 2")
+#     field(CALC, "2")
+#     field(OUT, "$(P):$(R):STATE_SP")
+#     field(FLNK, "$(P):$(R):write_current")
+# }
+# record(calcout, "$(P):$(R):write_current") {
+#     field(DESC, "Write real setpoint")
+#     field(INPA, "$(P):$(R):CURRENT_SP.VAL")  # Prende il valore utente
+#     field(CALC, "A")
+#     field(ODLY, "1.2")
+#     field(OUT, "$(P):$(R):Current_SP PP")  # Vero record di output
+#     field(FLNK, "$(P):$(R):start_ramp")
+# }
+# record(calcout, "$(P):$(R):start_ramp") {
+#     field(DESC, "Set GlobalControl to 16 (start ramp)")
+#     field(CALC, "16")
+#     field(ODLY, "1.0")
+#     field(OUT, "$(P):$(R):STATE_SP")
+# }
  
 ######
  
