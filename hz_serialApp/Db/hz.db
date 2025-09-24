@@ -21,12 +21,31 @@ record(calcout, "$(P):$(R):CALC_CURRENT_RAW") {
     field(FLNK, "$(P):$(R):RAW_CURRENT_SP")
 }
 
+
 record(ao, "$(P):$(R):RAW_CURRENT_SP") {
     field(DESC, "Raw current setpoint")
     field(DTYP, "asynInt32")
     field(OUT, "@asyn($(WPORT),2,$(TIMEOUT))MODBUS_DATA")
     field(PREC, "0")
+    field(FLNK, "$(P):$(R):SET_CURRENT_RB")
+}
+
+
+# =========================
+# Set current readback (0x000E)
+# =========================
+record(ai, "$(P):$(R):SET_CURRENT_RB") {
+    field(DESC, "Set current readback")
+    field(DTYP, "asynInt32")
+    field(INP, "@asyn($(PORT),10,$(TIMEOUT))MODBUS_DATA")
+    field(LINR, "LINEAR")
+    field(ESLO, "0.001")
+    field(EGU, "A")
+    field(PREC, "3")
+    field(LOPR, "0")
+    field(HOPR, "32.767")
     field(FLNK, "$(P):$(R):AUTO_START_RAMP")
+
 }
 
 record(calcout, "$(P):$(R):AUTO_START_RAMP") {
@@ -126,6 +145,8 @@ record(calc, "$(P):$(R):CURRENT_RB") {
     field(CALC, "(A / 32767) * B")
     field(PREC, "3")
     field(EGU, "A")
+    field(FLNK, "$(P):$(R):RAW_VOLTAGE_RB")
+
 }
 
 # =========================
@@ -135,7 +156,6 @@ record(ai, "$(P):$(R):RAW_VOLTAGE_RB") {
     field(DESC, "Raw output voltage readback")
     field(DTYP, "asynInt32")
     field(INP, "@asyn($(PORT),8,$(TIMEOUT))MODBUS_DATA")
-    field(SCAN, "1 second")
     field(FLNK, "$(P):$(R):VOLTAGE_RB")
 }
 
@@ -161,24 +181,9 @@ record(ai, "$(P):$(R):EARTH_CURRENT_RB") {
     field(PREC, "3")
     field(LOPR, "0")
     field(HOPR, "32.767")
-    field(SCAN, "1 second")
+    field(SCAN, "60 second")
 }
 
-# =========================
-# Set current readback (0x000E)
-# =========================
-record(ai, "$(P):$(R):SET_CURRENT_RB") {
-    field(DESC, "Set current readback")
-    field(DTYP, "asynInt32")
-    field(INP, "@asyn($(PORT),10,$(TIMEOUT))MODBUS_DATA")
-    field(LINR, "LINEAR")
-    field(ESLO, "0.001")
-    field(EGU, "A")
-    field(PREC, "3")
-    field(LOPR, "0")
-    field(HOPR, "32.767")
-    field(SCAN, "1 second")
-}
 
 # =========================
 # Command Register (0x0000)
