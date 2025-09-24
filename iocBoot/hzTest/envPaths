@@ -1,0 +1,7 @@
+epicsEnvSet("IOC","modbusiocSample")
+epicsEnvSet("TOP","/app/IOC-DEVEL/hazemeyer-lnf")
+epicsEnvSet("EPICS_BASE","/epics/epics-base")
+epicsEnvSet("SUPPORT","/epics/support")
+epicsEnvSet("ASYN","/epics/support/asyn")
+epicsEnvSet("MODBUS","/epics/support/modbus")
+epicsEnvSet("STREAMDEVICE","/epics/support/StreamDevice")
