@@ -96,8 +96,8 @@ record(mbbiDirect, "$(P):$(R):RAW_STATE_RB") {
     field(DESC, "Raw State Register 1")
     field(DTYP, "asynUInt32Digital")
     field(INP, "@asynMask($(PORT) 6 0xFFFF $(TIMEOUT))MODBUS_DATA")
-    field(SCAN, "1 second")
-    field(FLNK, "$(P):$(R):RAW_STATE2_RB")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(P):$(R):state_calc")
 }
 
 record(mbbiDirect, "$(P):$(R):RAW_STATE2_RB") {
@@ -105,6 +105,8 @@ record(mbbiDirect, "$(P):$(R):RAW_STATE2_RB") {
     field(DTYP, "asynUInt32Digital")
     field(INP, "@asynMask($(PORT) 11 0xFFFF $(TIMEOUT))MODBUS_DATA")
     field(NOBT, "16")
+    field(SCAN, "I/O Intr")
+
     field(FLNK, "$(P):$(R):state_calc")
 }
 
@@ -134,7 +136,7 @@ record(ai, "$(P):$(R):RAW_CURRENT_RB") {
     field(DESC, "Raw output current readback")
     field(DTYP, "asynInt32")
     field(INP, "@asyn($(PORT),7,$(TIMEOUT))MODBUS_DATA")
-    field(SCAN, "1 second")
+    field(SCAN, "I/O Intr")
     field(FLNK, "$(P):$(R):CURRENT_RB")
 }
 
@@ -181,7 +183,7 @@ record(ai, "$(P):$(R):EARTH_CURRENT_RB") {
     field(PREC, "3")
     field(LOPR, "0")
     field(HOPR, "32.767")
-    field(SCAN, "60 second")
+    field(SCAN, "I/O Intr")
 }
 
 
@@ -267,8 +269,8 @@ record(bi, "$(P):$(R):OPERATIONAL") {
 
 record(calcout, "$(P):$(R):state_calc") {
     field(DESC, "Calculate state from status bits")
-    field(INPA, "$(P):$(R):OPERATIONAL")
-    field(INPB, "$(P):$(R):ALL_FAULT")
+    field(INPA, "$(P):$(R):OPERATIONAL CP")
+    field(INPB, "$(P):$(R):ALL_FAULT CP")
     field(CALC, "B=1 ? 4 : (A=1 ? 1 : 2)")
     field(OUT, "$(P):$(R):STATE_RB PP")
     field(OOPT, "Every Time")
