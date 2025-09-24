@@ -2,6 +2,15 @@
 # Provides EPICS interface for Hazemeyer power supplies via Modbus
 
 # =========================
+# Software Version
+# =========================
+record(stringout, "$(P):$(R):SWVER") {
+    field(DESC, "Software IOC Version")
+    field(VAL, "$(SWVER=1.0.1)")
+    field(PINI, "YES")
+}
+
+# =========================
 # Channel Set current (0x0006)
 # =========================
 record(ao, "$(P):$(R):CURRENT_SP") {
