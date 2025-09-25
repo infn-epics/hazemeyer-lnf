@@ -1,21 +1,15 @@
-# last
 # hz_iocst.db - Database EPICS Modbus HAZEMEYER Iocaste Power Supply
 # This file contains the database records for the HAZEMEYER Iocaste Power Supply
 # It includes the project code, customer number, and various control and status registers.
 
 # Direct Modbus addresses without substitutions
 
-record(stringout, "$(P)$(R):SWVER") {
-    field(DESC, "Software IOC Version")
-    field(VAL, "$(SWVER=1.0.1)")
-    field(PINI, "YES")
-}
 
 ########################################################################################
 ### READOUT - Compliant with HAZEMEYER Iocaste Power Supply - Holding Registers Table
 ########################################################################################
 
-record(ai, "$(P)$(R):current_rb") {
+record(ai, "$(P)$(R)current_rb") {
     field(DESC, "Current Value")
     field(DTYP, "asynFloat64")  
     field(INP, "@asyn($(PORT),12,$(TIMEOUT))FLOAT32_LE") 
@@ -23,7 +17,7 @@ record(ai, "$(P)$(R):current_rb") {
     field(SCAN, "1 second")
 }
 
-record(ai, "$(P)$(R):voltage_rb") {
+record(ai, "$(P)$(R)voltage_rb") {
     field(DESC, "Voltage Value")
     field(DTYP, "asynFloat64")  
     field(INP, "@asyn($(PORT),14,$(TIMEOUT))FLOAT32_LE") 
@@ -31,7 +25,7 @@ record(ai, "$(P)$(R):voltage_rb") {
     field(SCAN, "1 second")
 }
 
-record(ai, "$(P)$(R):ramp_rb") {
+record(ai, "$(P)$(R)ramp_rb") {
     field(DESC, "Ramp current")
     field(DTYP, "asynFloat64")  
     field(INP, "@asyn($(PORT),10,$(TIMEOUT))FLOAT32_LE") 
@@ -39,7 +33,7 @@ record(ai, "$(P)$(R):ramp_rb") {
     field(SCAN, "1 second")
 }
 
-record(ai, "$(P)$(R):current_set_point_rb") {
+record(ai, "$(P)$(R)current_set_point_rb") {
     field(DESC, "Setted Current register")
     field(DTYP, "asynFloat64")  
     field(INP, "@asyn($(PORT),8,$(TIMEOUT))FLOAT32_LE") 
@@ -47,14 +41,14 @@ record(ai, "$(P)$(R):current_set_point_rb") {
     field(SCAN, "1 second")
 }
 
-record(longin, "$(P)$(R):status_raw") {
+record(longin, "$(P)$(R)status_raw") {
     field(DESC, "Raw Status Value")
     field(DTYP, "asynInt32")
     field(INP, "@asyn($(PORT),16,1)")
     field(SCAN, "1 second")
 }
 
-record(mbbiDirect, "$(P)$(R):statusDirect") {
+record(mbbiDirect, "$(P)$(R)statusDirect") {
     field(DTYP, "asynUInt32Digital")
     field(INP, "@asynMask($(PORT),16,0xFFFF,1)")
     field(SCAN, "I/O Intr")
@@ -63,7 +57,7 @@ record(mbbiDirect, "$(P)$(R):statusDirect") {
 
 # Questo record evita di usare power_on (tipo bi) e power_off (tipo bi)
 
-record(mbbi, "$(P)$(R):powerStatus") {
+record(mbbi, "$(P)$(R)powerStatus") {
     field(DESC, "Power State")
     field(DTYP, "asynUInt32Digital")
     field(INP, "@asynMask($(PORT), 16, 0x3, 0)")  # legge i bit 0–1 del registro 16
@@ -74,7 +68,7 @@ record(mbbi, "$(P)$(R):powerStatus") {
     field(SCAN, "1 second")                       # Polling ogni secondo
 }
 
-# record(bi, "$(P)$(R):power_on") {
+# record(bi, "$(P)$(R)power_on") {
 #     field(DESC, "Power On Status")
 #     field(DTYP, "asynUInt32Digital")
 #     field(INP, "@asynMask($(PORT),16,0x0001,1)")
@@ -83,7 +77,7 @@ record(mbbi, "$(P)$(R):powerStatus") {
 #     field(ONAM, "ON")
 # }
 
-# record(bi, "$(P)$(R):power_off") {
+# record(bi, "$(P)$(R)power_off") {
 #     field(DESC, "Power Off Status")
 #     field(DTYP, "asynUInt32Digital")
 #     field(INP, "@asynMask($(PORT),16,0x0002,1)")
@@ -92,7 +86,7 @@ record(mbbi, "$(P)$(R):powerStatus") {
 #     field(ONAM, "POWER OFF")
 # }
 
-record(bi, "$(P)$(R):global_fault") {
+record(bi, "$(P)$(R)global_fault") {
     field(DESC, "Global Fault Status")
     field(DTYP, "asynUInt32Digital")
     field(INP, "@asynMask($(PORT),16,0x0004,1)")
@@ -101,7 +95,7 @@ record(bi, "$(P)$(R):global_fault") {
     field(ONAM, "FAULT")
 }
 
-record(bi, "$(P)$(R):ready") {
+record(bi, "$(P)$(R)ready") {
     field(DESC, "Ready Status")
     field(DTYP, "asynUInt32Digital")
     field(INP, "@asynMask($(PORT),16,0x0008,1)")
@@ -113,7 +107,7 @@ record(bi, "$(P)$(R):ready") {
 
 # Questo record evita di usare local (tipo bi) e remote (tipo bi)
 
-record(mbbi, "$(P)$(R):accessMode") {
+record(mbbi, "$(P)$(R)accessMode") {
     field(DESC, "Access Mode: Local/Remote")
     field(DTYP, "asynUInt32Digital")
     field(INP, "@asynMask($(PORT), 16, 0x0030, 4)")  # Leggi bits 4-5 e shiftali di 4 bit
@@ -127,7 +121,7 @@ record(mbbi, "$(P)$(R):accessMode") {
 }
 
 
-# record(bi, "$(P)$(R):remote") {
+# record(bi, "$(P)$(R)remote") {
 #     field(DESC, "Remote Status")
 #     field(DTYP, "asynUInt32Digital")
 #     field(INP, "@asynMask($(PORT),16,0x0010,1)")
@@ -136,7 +130,7 @@ record(mbbi, "$(P)$(R):accessMode") {
 #     field(ONAM, "REMOTE")
 # }
 
-# record(bi, "$(P)$(R):local") {
+# record(bi, "$(P)$(R)local") {
 #     field(DESC, "Local Status")
 #     field(DTYP, "asynUInt32Digital")
 #     field(INP, "@asynMask($(PORT),16,0x0020,1)")
@@ -145,7 +139,7 @@ record(mbbi, "$(P)$(R):accessMode") {
 #     field(ONAM, "LOCAL")
 # }
 
-record(bi, "$(P)$(R):regulation_ok") {
+record(bi, "$(P)$(R)regulation_ok") {
     field(DESC, "Regulation OK Status")
     field(DTYP, "asynUInt32Digital")
     field(INP, "@asynMask($(PORT),16,0x0040,1)")
@@ -154,83 +148,56 @@ record(bi, "$(P)$(R):regulation_ok") {
     field(ONAM, "OK")
 }
 
-record(mbbiDirect, "$(P)$(R):faults1") {
-    field(DTYP, "asynUInt32Digital")
-    field(INP, "@asynMask($(PORT),17,0xFFFF,1)")
-    field(SCAN, "I/O Intr")
-
-}
-
-record(mbbiDirect, "$(P)$(R):faults2") {
-    field(DTYP, "asynUInt32Digital")
-    field(INP, "@asynMask($(PORT),18,0xFFFF,1)")
-    field(SCAN, "I/O Intr")
-
-}
 
 ########################################################################################
 ### SETTINGS - Compliant with HAZEMEYER Iocaste Power Supply - Holding Registers Table
 ########################################################################################
 
-record(ao, "$(P)$(R):current_set") {
+record(ao, "$(P)$(R)current_set") {
     field(DESC, "Set Current")
     field(DTYP, "asynFloat64")  
     field(OUT, "@asyn($(WPORT),2,$(TIMEOUT))FLOAT32_LE") 
     field(EGU, "A")
-    field(SCAN, "Passive")
+    field(SCAN, "1 second")
 }
 
-record(ao, "$(P)$(R):ramp_set") {
+record(ao, "$(P)$(R)ramp_set") {
     field(DESC, "Set Ramp")
     field(DTYP, "asynFloat64")  
     field(OUT, "@asyn($(WPORT),6,$(TIMEOUT))FLOAT32_LE") 
     field(EGU, "A/s")
-    field(SCAN, "Passive")
+    field(SCAN, "1 second")
 }
 
-record(bo, "$(P)$(R):power_on") {
+record(bo, "$(P)$(R)power_on") {
     field(DESC, "Power On Command")
     field(DTYP, "asynUInt32Digital")
     field(OUT, "@asynMask($(WPORT),0,0x0001,1)")
-    field(SCAN, "Passive")
-    field(ZNAM, "Normal")
-    field(ONAM, "Power_ON")
+    field(SCAN, "1 second")
+    field(ZNAM, "OFF")
+    field(ONAM, "ON")
 }
 
-record(bo, "$(P)$(R):power_off") {
+record(bo, "$(P)$(R)power_off") {
     field(DESC, "Power Off Command")
     field(DTYP, "asynUInt32Digital")
     field(OUT, "@asynMask($(WPORT),0,0x0002,1)")
-    field(SCAN, "Passive")
-    field(ZNAM, "Normal")
-    field(ONAM, "Power_OFF")
+    field(SCAN, "1 second")
+    field(ZNAM, "NORMAL")
+    field(ONAM, "POWER OFF")
 }
 
-
-record(bo, "$(P)$(R):reset") {
+record(bo, "$(P)$(R)reset") {
+    field(DESC, "Reset Command")
     field(DTYP, "asynUInt32Digital")
     field(OUT, "@asynMask($(WPORT),0,0x0004,1)")
-    field(SCAN, "Passive")
-    field(ZNAM, "Normal")
-    field(ONAM, "Reset")
+    field(SCAN, "1 second")
+    field(ZNAM, "NORMAL")
+    field(ONAM, "RESET")
 }
 
-# Reset con passthrough del valore 0x0004
-# Serve per evitare problemi con il comando di reset che richiede un impulso
-# di durata minima (>=100ms). In questo modo si può usare un pulsante momentaneo
-# che invia 1 quando premuto e 0 quando rilasciato,
-# e il record bo invia il comando di reset solo quando il valore cambia.  
-# Questo funziona, ma vorrei provare il reset senza passthrough!!!!!  
-# record(bo, "$(P)$(R):reset") {
-#     field(DTYP, "asynUInt32Digital")
-#     # asynMask: <porta> <registro> <mask> <timeout>
-#     field(OUT, "@asynMask($(WPORT),0,0x0004,3000)")  
-#     field(SCAN, "Passive")  # scrive solo quando cambi valore
-# }
-
-record(bo, "$(P)$(R):ramp_start") {
+record(bo, "$(P)$(R)ramp_start") {
     field(DESC, "Ramp Command")
     field(DTYP, "asynUInt32Digital")
     field(OUT, "@asynMask($(WPORT),0,0x0008,1)")
 }
-
