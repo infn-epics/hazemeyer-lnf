@@ -1,4 +1,4 @@
-# last
+# 2025-09-25 SWVER=1.0.1
 # hz_iocst.db - Database EPICS Modbus HAZEMEYER Iocaste Power Supply
 # This file contains the database records for the HAZEMEYER Iocaste Power Supply
 # It includes the project code, customer number, and various control and status registers.
