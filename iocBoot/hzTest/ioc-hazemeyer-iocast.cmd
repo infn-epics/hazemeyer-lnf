@@ -8,7 +8,7 @@ hz_iocast_registerRecordDeviceDriver(pdbbase)
 
 
 # TCP Connection - Hezemeyer:
-drvAsynIPPortConfigure("Hazemeyer_Asyn", "192.168.0.107:502", 0, 0, 1) 
+drvAsynIPPortConfigure("Hazemeyer_Asyn", "192.168.0.108:502", 0, 0, 1) 
 # https://millenia.cars.aps.anl.gov/software/epics/modbusDoc.html#Overview_of_Modbus
 
 # open a channel used by Asyn
@@ -38,7 +38,7 @@ drvModbusAsynConfigure("Hazemeyer_001_RAO", "Hazemeyer_Asyn", 1, 3, 0, 37, 0, 20
 
 ## Write holding registers (0-7 - in according to Hazemeyer exchange_table.pdf)    
 # drvModbusAsynConfigure(portName, linkType, slave, functionCode, startAddress, count, timeoutMsec, writeDelayMsec, name)
-drvModbusAsynConfigure("Hazemeyer_001_WAO", "Hazemeyer_Asyn", 1, 16, 0, 7, 0, 500, "HAZEMEYER")
+drvModbusAsynConfigure("Hazemeyer_001_WAO", "Hazemeyer_Asyn", 1, 6, 0, 7, 0, 500, "HAZEMEYER")
 
 
 # https://millenia.cars.aps.anl.gov/software/epics/modbusDoc.html#Overview_of_Modbus
@@ -46,7 +46,7 @@ drvModbusAsynConfigure("Hazemeyer_001_WAO", "Hazemeyer_Asyn", 1, 16, 0, 7, 0, 50
 
 
 # Load database
-dbLoadRecords("../../db/hz_iocast.db", "P=PS:LAB:,R=PS1:,PORT=Hazemeyer_001_RAO, WPORT=Hazemeyer_001_WAO ,TIMEOUT=1000")
+dbLoadRecords("../../db/hz_iocast.db", "P=PS:LAB:,R=PS1,PORT=Hazemeyer_001_RAO, WPORT=Hazemeyer_001_WAO ,TIMEOUT=1000")
 
 # Oppure usa il file di sostituzione
 # dbLoadTemplate("db/PowerSupply.substitutions")
@@ -61,8 +61,8 @@ iocInit
 #asynSetTraceIOMask  "Hazemeyer_001_RAO", 0, 4 
 #asynSetTraceMask    "Hazemeyer_001_RAO", 0, 9
 
-#asynSetTraceIOMask  "Hazemeyer_001_WAO", 0, 4 
-#asynSetTraceMask    "Hazemeyer_001_WAO", 0, 9
+asynSetTraceIOMask  "Hazemeyer_001_WAO", 0, 4 
+asynSetTraceMask    "Hazemeyer_001_WAO", 0, 9
 
 
 
