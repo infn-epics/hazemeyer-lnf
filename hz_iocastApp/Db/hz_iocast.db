@@ -228,3 +228,102 @@ record(bo, "$(P)$(R):ramp_start") {
     field(OUT, "@asynMask($(WPORT),0,0x0008,1)")
 }
 
+########################################################################################
+### EPIK8s - PVs for UNIMAG Class
+########################################################################################
+
+record(ai, "$(P)$(R):CURRENT_RB") {
+    field(DESC, "Current Value")
+    field(INP, "$(P)$(R):current_rb CP")
+    field(EGU, "A")
+}
+
+########################################################
+### CURRENT_SP : 500 ms before ramp_start - for UNIMAG
+########################################################
+
+record(ao, "$(P)$(R):CURRENT_SP") {
+    field(DESC, "Set Current with Ramp")
+    field(EGU, "A")
+    field(FLNK, "$(P)$(R):current_set_calc")
+}
+
+record(calcout, "$(P)$(R):current_set_calc") {
+    field(INPA, "$(P)$(R):CURRENT_SP")
+    field(CALC, "A")
+    field(OUT, "$(P)$(R):current_set PP")
+    field(FLNK, "$(P)$(R):ramp_delay")
+}
+
+record(seq, "$(P)$(R):ramp_delay") {
+    field(DESC, "Delay before ramp")
+    field(DLY1, "0.5") 
+    field(DOL1, "1")
+    field(LNK1, "$(P)$(R):ramp_start PP")
+}
+
+
+###################################################
+### STATE_RB for UNIMAG
+###################################################
+
+
+record(calc, "$(P):$(R):STATE_RB_CALC") {
+    field(DESC, "State readback")
+    field(INPA, "$(P)$(R):powerStatus CP")      # Power Status (1=ON, 2=OFF)
+    field(INPB, "$(P)$(R):ready CP")            # Ready (0=NOT READY, 1=READY)
+    field(INPC, "$(P)$(R):global_fault CP")     # Global Fault (0=OK, 1=FAULT)
+    field(CALC, "C?4:(A=2?0:(A=1&&B?1:2))")     # Logic
+    field(SCAN, "Passive")                      # Updated from CP
+}
+
+
+record(mbbi, "$(P):$(R):STATE_RB") {
+    field(DESC, "State readback string")
+    field(INP, "$(P):$(R):STATE_RB_CALC CP MS")
+    field(SCAN, "Passive")
+    field(ZRVL, "0")
+    field(ZRST, "OFF")
+    field(ONVL, "1")
+    field(ONST, "ON")
+    field(TWVL, "2")
+    field(TWST, "STANDBY")
+    field(THVL, "3")
+    field(THST, "RESET")
+    field(FRVL, "4")
+    field(FRST, "FAULT")
+    field(FRSV, "MAJOR")
+    field(FVVL, "5")
+    field(FVST, "ERROR")
+    field(FVSV, "MAJOR")
+}
+
+######################################################
+### STATE_SP | ON, STABY, RST 
+######################################################
+
+record(mbbo, "$(P):$(R):STATE_SP") {
+    field(DESC, "State setpoint")
+    field(ZRVL, "0")
+    field(ZRST, "OFF")
+    field(ONVL, "1")
+    field(ONST, "ON")
+    field(TWVL, "2")
+    field(TWST, "STANDBY")
+    field(THVL, "3")
+    field(THST, "RESET")
+    field(FRVL, "4")
+    field(FRST, "FAULT")
+    field(FVVL, "5")
+    field(FVST, "ERROR")
+    field(FLNK, "$(P):$(R):state_dispatcher")
+}
+
+record(seq, "$(P):$(R):state_dispatcher") {
+    field(SELM, "Specified")
+    field(SELL, "$(P):$(R):STATE_SP")
+    field(DOL1, "1")
+    field(LNK1, "$(P)$(R):power_on.VAL PP")  # ON (value 1)
+    field(DOL4, "1")
+    field(LNK4, "$(P)$(R):reset.VAL PP")     # FAULT (value 4)
+}
