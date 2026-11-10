@@ -50,16 +50,31 @@ The database implements:
 | 3 | `FAULT` | MAJOR | Power supply fault |
 | 4 | `EXT_INTLK` | MAJOR | External interlock |
 | 5 | `CONN_FAULT` | MAJOR | Communication errors (the status read fails) |
-| 6 | `SP_NOT_REACHED` | MINOR | Current setpoint not reached |
-| 7 | `ST_NOT_REACHED` | MAJOR | State not reached (UNIMAG failure) |
 
-Faults win over `ST_NOT_REACHED`, which wins over `SP_NOT_REACHED`. Values from 8 up are
-additional, device specific states. `STATE_SP` accepts `OFF`, `ON`, `STANDBY` and `RESET`.
+Values from 8 up are additional, device specific states. A setpoint or state not reached is a
+software state, reported by `STATE_SM` (below) and not by `STATE_RB`. `STATE_SP` accepts `OFF`, `ON`, `STANDBY` and `RESET`.
 
 Serial (`hz.db`): `FAULT` from `ALL_FAULT`, `STANDBY` when not operational, `CONN_FAULT` when
 `RAW_STATE_RB` cannot be read. IOC-cast (`hz_iocast.db`): `FAULT` from `global_fault`, `OFF` when
 the power status is off, `STANDBY` when on but not ready, `CONN_FAULT` when `powerStatus` cannot
 be read.
+
+### UNIMAG state machine (`STATE_SM`)
+
+`STATE_SM` tells what the supply is doing:
+
+| Value | State | Alarm | Meaning |
+|-------|-------|-------|---------|
+| 0 | `READY` | - | Idle, last command done |
+| 1 | `GOTOSET` | - | Readback going to the setpoint (within `SET_TOLERANCE`) |
+| 2 | `GOTOSTATE` | - | Commanded state not reached yet |
+| 3 | `GOZERO` | - | Readback going to a zero setpoint (within `ZERO_TOLERANCE`) |
+| 4 / 5 | `GOPOS` / `GONEG` | - | Polarity change: not used by this IOC |
+| 6 | `SPNOTSET` | MINOR | Setpoint not reached within `SET_TIMEOUT_S` (`SP_NOT_REACHED`) |
+| 7 | `STATENOTSET` | MAJOR | State not reached within `SET_TIMEOUT_S` (`ST_NOT_REACHED`) |
+
+Commands are not sent again (no `RETRY`). `SPNOTSET` / `STATENOTSET` clear when the target is
+reached, on a new command, or with `STATE_SP` = `RESET`, which restarts both timeouts.
 
 ### UNIMAG configuration
 
@@ -71,8 +86,9 @@ be read.
 
 They are db macros (same names) and live PVs, so they can also be changed at runtime. The
 timeout restarts whenever the readback gets closer to the setpoint, on a new setpoint and on a
-new state command. The setpoint check only runs while the supply is `ON`, and the state check
-is armed by the first `STATE_SP` command after boot, so a supply left running is not reported.
+new state command. The setpoint check only runs while the supply is `ON`. It is armed by the first `CURRENT_SP`
+written after boot, the state check by the first `STATE_SP` command, so a supply left running is
+not reported.
 `SP_NOT_REACHED` and `ST_NOT_REACHED` (and `SP_ERR`, `SP_WDOG`, `ST_WDOG`) are readable PVs.
 
 ## Modbus Mapping
